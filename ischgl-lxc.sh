@@ -71,7 +71,14 @@ if [ -f "$0" ] && grep -q '^__INSTALLER_BELOW__$' "$0" 2>/dev/null; then
   awk 'f{print} /^__INSTALLER_BELOW__$/{f=1}' "$0" | base64 -d > "$TMP/install-ischgl.sh"
   RUN_CMD="bash $(readlink -f "$0")"
 else
-  curl -fsSL -H "Cache-Control: no-cache" "$REPO_RAW/install-ischgl.sh?nocache=$(date +%s)" -o "$TMP/install-ischgl.sh" \
+  INST_URL="$REPO_RAW/install-ischgl.sh?nocache=$(date +%s)"
+  # Neuesten Commit nachschlagen und genau diese Version laden (umgeht den GitHub-Cache sicher)
+  case "$REPO_RAW" in https://raw.githubusercontent.com/*/main)
+    REPO_PATH="${REPO_RAW#https://raw.githubusercontent.com/}"; REPO_PATH="${REPO_PATH%/main}"
+    SHA=$(curl -fsSL -m 15 -H "Accept: application/vnd.github.sha" "https://api.github.com/repos/$REPO_PATH/commits/main" 2>/dev/null || true)
+    case "$SHA" in [0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*) INST_URL="https://raw.githubusercontent.com/$REPO_PATH/$SHA/install-ischgl.sh"; msg "Lade Version ${SHA:0:7} …";; esac
+  ;; esac
+  curl -fsSL -H "Cache-Control: no-cache" "$INST_URL" -o "$TMP/install-ischgl.sh" \
     || fail "Installer konnte nicht geladen werden: $REPO_RAW/install-ischgl.sh"
   RUN_CMD="bash -c \"\$(curl -fsSL $REPO_RAW/ischgl-lxc.sh)\""
 fi
