@@ -234,6 +234,9 @@ button{font:inherit;color:inherit}
 /* ================= RADAR ================= */
 .radar{position:relative;background:var(--s1);border:1px solid var(--line)}
 .radar-map{position:relative;z-index:0;isolation:isolate;height:min(70vh,600px);min-height:380px}
+.leaflet-tooltip{background:var(--s1);color:var(--snow);border:0;border-radius:0;box-shadow:3px 3px 0 var(--pink);font:800 italic 15px/1 var(--cond);letter-spacing:.05em;text-transform:uppercase;padding:6px 8px 5px}
+.leaflet-tooltip-right:before{border-right-color:var(--s1)}
+.bm-dark{filter:invert(1) hue-rotate(185deg) brightness(.82) contrast(.92) saturate(.55)}
 .radar-ctl{display:flex;align-items:center;gap:12px;padding:12px;border-top:1px solid var(--line);flex-wrap:wrap}
 .radar-ctl input[type=range]{flex:1;min-width:140px;accent-color:var(--pink)}
 .radar-time{font:900 italic 26px/1 var(--cond);font-variant-numeric:tabular-nums;min-width:120px}
@@ -524,7 +527,7 @@ dialog::backdrop{background:rgba(3,2,8,.75)}
   </section>
 
   <footer>
-    <span>Schnee: ischgl.com · Wetter &amp; 0°-Grenze: Open-Meteo.com (CC BY 4.0) · Pisten &amp; Lifte: © OpenStreetMap-Mitwirkende · Radar: RainViewer · Karten: OpenTopoMap, CARTO · Webcams &amp; Live-Pistenplan: ischgl.com / Intermaps.</span>
+    <span>Schnee: ischgl.com · Wetter &amp; 0°-Grenze: Open-Meteo.com (CC BY 4.0) · Pisten &amp; Lifte: © OpenStreetMap-Mitwirkende · Radar: RainViewer · Karten: OpenTopoMap, OpenStreetMap · Webcams &amp; Live-Pistenplan: ischgl.com / Intermaps.</span>
     <span>Alle Angaben ohne Gewähr. Das Ski-Navi kennt keine Sperrungen, Lawinengefahr oder Pistenzustand – vor Ort gelten Beschilderung und Pistendienst.</span>
   </footer>
 </main>

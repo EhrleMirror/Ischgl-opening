@@ -660,7 +660,7 @@
       RD.layers.forEach(function(l){RD.map.removeLayer(l);});
       RD.host=j.host;RD.frames=(j.radar&&j.radar.past)||[];
       RD.layers=RD.frames.map(function(f){
-        return L.tileLayer(RD.host+f.path+'/256/{z}/{x}/{y}/2/1_1.png',{opacity:0,maxNativeZoom:7,maxZoom:11,attribution:'Radar © <a href="https://www.rainviewer.com">RainViewer</a>'}).addTo(RD.map);
+        return L.tileLayer(RD.host+f.path+'/256/{z}/{x}/{y}/2/1_1.png',{opacity:0,maxNativeZoom:7,maxZoom:9,attribution:'Radar © <a href="https://www.rainviewer.com">RainViewer</a>'}).addTo(RD.map);
       });
       $('rd-slider').max=Math.max(0,RD.layers.length-1);
       showFrame(RD.layers.length-1);$('radar-msg').hidden=true;
@@ -670,8 +670,9 @@
   function initRadar(){
     if(RD.started)return;RD.started=true;
     loadLeaflet().then(function(L){
-      RD.map=L.map('radar-map',{zoomControl:true,minZoom:4,maxZoom:11}).setView([LAT,LON],7);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(RD.map);
+      RD.map=L.map('radar-map',{zoomControl:true,minZoom:4,maxZoom:9}).setView([LAT,LON],6);
+      /* freie OSM-Kacheln, per CSS-Filter dunkel eingefärbt (CARTO verlangt inzwischen einen Schlüssel) */
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,className:'bm-dark',attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(RD.map);
       L.marker([LAT,LON],{icon:L.divIcon({className:'',html:'<div class="pin b"></div>',iconSize:[22,22],iconAnchor:[11,11]})}).addTo(RD.map).bindTooltip('Ischgl',{permanent:true,direction:'right',offset:[12,0]});
       return loadRadarFrames();
     }).catch(function(e){RD.started=false;mapMsg('radar-msg','<span>Radar nicht geladen</span><small>'+esc(e.message)+'</small>');});
