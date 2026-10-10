@@ -19,7 +19,6 @@
 #      BRIDGE=vmbr0
 #      IP=dhcp             oder z. B. IP=192.168.1.50/24 GW=192.168.1.1
 #      DISK=2 RAM=256 CORES=1
-#      EDIT_TOKEN=...      eigenes Passwort zum Bearbeiten (sonst zufällig)
 #      TAILSCALE=1         Tailscale installieren und Funnel auf Port 8080 einschalten
 #      TS_AUTHKEY=tskey-…  Tailscale-Schlüssel, dann ohne Login-Link (gut fürs Handy)
 #      CF_TOKEN=eyJ…       Cloudflare-Tunnel-Token: veröffentlicht die Seite über deine Domain
@@ -296,7 +295,6 @@ printf "${GN}══════════════════════�
 printf "${GN}  Fertig!${CL}\n\n"
 printf "  %-11s %s\n" "Container" "$CTID ($CT_HOSTNAME)"
 printf "  %-11s %s\n" "Heimnetz" "http://${IPADDR:-<container-ip>}:8080"
-printf "  %-11s %s\n" "Passwort" "${TOKEN:-siehe /etc/ischgl-opening.env im Container}"
 if [ -n "$FUNNEL_URL" ]; then
   printf "  %-12s %s\n" "Öffentlich" "$FUNNEL_URL"
 fi

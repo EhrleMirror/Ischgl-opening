@@ -4,9 +4,6 @@ services:
     container_name: ischgl-opening
     ports:
       - "8080:8080"
-    environment:
-      # Passwort zum Bearbeiten im Browser. Unbedingt ändern!
-      EDIT_TOKEN: "bitte-aendern"
     volumes:
       - ischgl-data:/data
     restart: unless-stopped

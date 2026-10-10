@@ -57,15 +57,9 @@
   /* =====================================================================
      Daten
      ===================================================================== */
-  var STATUS={closed:'Geschlossen',partial:'Teilweise offen',open:'Geöffnet'};
-  var FALLBACK={updated:'',status:'closed',statusNote:'',snowTop:0,snowValley:0,liftsOpen:0,liftsTotal:46,slopesOpen:0,slopesTotal:239,groupNote:''};
-  var manual=null, official=null, officialErr=null, wx=null, wxErr=null, cfg={}, lastRefresh=0;
+  var official=null, officialErr=null, wx=null, wxErr=null, cfg={}, lastRefresh=0;
   var cfgReady=getJSON('api/config').then(function(c){cfg=c||{};}).catch(function(){cfg={};});
 
-  function loadManual(){
-    return getJSON('data.json?t='+Date.now()).then(function(j){manual=Object.assign({},FALLBACK,j||{});})
-      .catch(function(){if(!manual)manual=Object.assign({},FALLBACK);});
-  }
   function loadOfficial(force){
     if(!cfg.snow)return Promise.resolve();
     return getJSON('api/snow'+(force?'?force=1':'')).then(function(j){official=j;officialErr=null;})
@@ -118,8 +112,7 @@
   function snowStations(){
     if(official&&official.stations&&official.stations.length)
       return official.stations.slice().sort(function(a,b){return b.alt-a.alt;});
-    if(!manual)return [];
-    return [{name:'Berg',alt:null,depth:n(manual.snowTop),fresh:null},{name:'Tal',alt:null,depth:n(manual.snowValley),fresh:null}];
+    return [];
   }
   function stakeSvg(depth,fresh,maxCm){
     var W=120,H=200,top=14,ground=186,h=ground-top;
@@ -143,6 +136,9 @@
     st.forEach(function(s){maxDepth=Math.max(maxDepth,s.depth);});
     var maxCm=Math.max(100,Math.ceil((maxDepth+20)/50)*50);
     var row=$('stakes');row.innerHTML='';
+    if(!st.length){
+      row.innerHTML='<div class="stake-msg">'+(cfg.snow?'Schneebericht von ischgl.com gerade nicht erreichbar.<br>Später nochmal aktualisieren.':'Schneebericht braucht den Server.')+'</div>';
+    }
     st.forEach(function(s){
       var el=document.createElement('div');el.className='stake';
       el.innerHTML=stakeSvg(s.depth,s.fresh,maxCm)+'<span class="val num">'+fmtInt(s.depth)+'<em>cm</em></span>'+
@@ -154,22 +150,20 @@
       $('stake-src').textContent='ischgl.com'+(official.stale?' · älterer Stand':'');
       $('stake-last').textContent=official.lastSnowfall?'Letzter Schneefall: '+official.lastSnowfall:'';
     }else{
-      $('stake-src').textContent='von Hand';
-      $('stake-last').textContent=manual&&manual.updated?'Stand: '+manual.updated:'';
+      $('stake-src').textContent='ischgl.com';
+      $('stake-last').textContent='';
     }
   }
-  function renderManual(){
-    var s=manual||FALLBACK,st=STATUS[s.status]?s.status:'closed';
-    $('st-pill').className='status '+st;$('st-label').textContent=STATUS[st];
-    $('st-box').classList.toggle('open',st==='open');
-    $('st-note').textContent=s.statusNote||'';
-    $('st-lifts').innerHTML=fmtInt(s.liftsOpen)+'<span> / '+fmtInt(s.liftsTotal||46)+'</span>';
-    $('st-slopes').innerHTML=fmtInt(s.slopesOpen)+'<span> / '+fmtInt(s.slopesTotal||239)+' km</span>';
-    var gn=$('group-note');
-    if(s.groupNote&&String(s.groupNote).trim()){gn.textContent=s.groupNote;gn.hidden=false;}else gn.hidden=true;
+  /* Saisonstatus automatisch aus dem Datum */
+  function renderSeason(){
+    var left=daysLeft(),open=left<=0;
+    $('st-pill').className='status '+(open?'open':'closed');
+    $('st-label').textContent=open?'Saison läuft':(left===1?'Startet morgen':'Startet in '+left+' Tagen');
+    $('st-box').classList.toggle('open',open);
+    $('st-note').textContent=open?'Welche Lifte offen sind, zeigt der Live-Status im Pistenplan.':'Erster Skitag: Do 26.11.2026';
   }
   function renderMarquee(){
-    var items=[],st=snowStations(),s=manual||FALLBACK;
+    var items=[],st=snowStations();
     if(wx){
       items.push('Gipfel '+fmtTemp(wx.nowTop));
       if(isNum(wx.nowFl))items.push('0°-Grenze '+fmtAlt(wx.nowFl));
@@ -178,7 +172,6 @@
     }
     var idalp=st.filter(function(x){return /Idalp|Berg/.test(x.name);})[0];
     if(idalp)items.push('Schnee Idalp '+fmtInt(idalp.depth)+' cm');
-    items.push('Lifte '+fmtInt(s.liftsOpen)+'/'+fmtInt(s.liftsTotal||46));
     if(daysLeft()>0)items.push('Noch '+daysLeft()+' Tage bis Opening');else items.push('Saison läuft');
     items.push('239 km Piste');
     var html=items.map(function(t){return '<span>'+esc(t)+'</span>';}).join('');
@@ -329,11 +322,11 @@
     if(busy)return Promise.resolve();
     busy=true;var btn=$('btn-refresh');btn.disabled=true;btn.classList.add('spin');setLive('','Aktualisiere …');
     if(force){refreshCams();loadHeroCam();if(RD.map)loadRadarFrames();}
-    return Promise.all([loadManual(),loadOfficial(force),loadWeather()]).then(function(){
-      renderManual();renderSnow();renderWx();renderMarquee();lastRefresh=Date.now();
+    return Promise.all([loadOfficial(force),loadWeather()]).then(function(){
+      renderSeason();renderSnow();renderWx();renderMarquee();lastRefresh=Date.now();
       var probs=[];
       if(wxErr)probs.push('Wetter nicht erreichbar');
-      if(cfg.snow&&officialErr&&!official)probs.push('Schneebericht nicht erreichbar, Werte von Hand');
+      if(cfg.snow&&officialErr&&!official)probs.push('Schneebericht nicht erreichbar');
       else if(official&&official.stale)probs.push('Schneebericht: letzter Stand');
       setLive(probs.length?'err':'on','Live · '+clock()+(probs.length?' · '+probs.join(' · '):''));
     }).finally(function(){busy=false;btn.disabled=false;btn.classList.remove('spin');});
@@ -770,49 +763,6 @@
   lb.addEventListener('click',function(e){if(e.target===lb)lb.close();});
 
   /* =====================================================================
-     Bearbeiten
-     ===================================================================== */
-  var mode=null,dlg=$('editor'),saving=false,FIELDS=['liftsOpen','liftsTotal','slopesOpen','snowTop','snowValley'];
-  function enableFileMode(){
-    if(mode)return;mode='file';
-    $('ownerbar-text').textContent='Bearbeitungsmodus ohne Server: Das Formular erzeugt eine neue data.json. Ersetze damit die Datei im Seitenordner und lade den Ordner neu hoch.';
-    $('e-token-wrap').hidden=true;$('ed-save').textContent='data.json herunterladen';$('ownerbar').hidden=false;
-  }
-  function checkHash(){if(!mode&&/^#bearbeiten$/i.test(location.hash))enableFileMode();}
-  window.addEventListener('hashchange',checkHash);
-  function openEditor(){
-    var s=manual||FALLBACK;$('e-token').value=ls('ischgl26-token')||'';
-    $('e-status').value=STATUS[s.status]?s.status:'closed';$('e-statusNote').value=s.statusNote||'';
-    FIELDS.forEach(function(k){$('e-'+k).value=n(s[k]);});$('e-groupNote').value=s.groupNote||'';
-    var m=$('ed-msg');m.classList.remove('err');
-    m.textContent=mode==='file'?'Lädt eine neue data.json herunter. Erst nach dem Hochladen sehen alle den neuen Stand.':'Speichern ändert die Seite für alle.';
-    dlg.showModal();
-  }
-  function collect(){
-    var next=JSON.parse(JSON.stringify(manual||FALLBACK));
-    next.status=$('e-status').value;next.statusNote=$('e-statusNote').value.trim();
-    FIELDS.forEach(function(k){next[k]=n($('e-'+k).value);});next.groupNote=$('e-groupNote').value.trim();next.updated=nowStr();
-    return next;
-  }
-  function downloadJson(obj){
-    var blob=new Blob([JSON.stringify(obj,null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
-    a.href=url;a.download='data.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},4000);
-  }
-  $('btn-edit').addEventListener('click',openEditor);
-  $('ed-close').addEventListener('click',function(){dlg.close();});
-  $('ed-save').addEventListener('click',function(){
-    if(saving)return;var next=collect();
-    if(mode==='file'){downloadJson(next);manual=next;renderManual();renderSnow();renderMarquee();dlg.close();toast('data.json heruntergeladen');return;}
-    var btn=$('ed-save'),m=$('ed-msg'),token=$('e-token').value;
-    if(!token){m.textContent='Bitte das Passwort eintragen.';m.classList.add('err');$('e-token').focus();return;}
-    saving=true;btn.disabled=true;btn.textContent='Speichert …';m.classList.remove('err');m.textContent='Wird gespeichert …';
-    getJSON('api/data',{method:'POST',headers:{'Content-Type':'application/json','X-Edit-Token':token},body:JSON.stringify(next)})
-      .then(function(){ls('ischgl26-token',token);manual=next;renderManual();renderSnow();renderMarquee();dlg.close();toast('Gespeichert!');})
-      .catch(function(e){m.textContent=e.message||'Speichern hat nicht geklappt.';m.classList.add('err');})
-      .finally(function(){saving=false;btn.disabled=false;btn.textContent='Speichern';});
-  });
-
-  /* =====================================================================
      Packliste, Kopieren, Navigation
      ===================================================================== */
   var items=['Skipass','Ausweis','Helm &amp; Skibrille','Handschuhe, Mütze, Buff','Warme Schicht für abends','Sonnencreme','Powerbank &amp; Kabel','Ski gewachst, Bindung geprüft'];
@@ -842,5 +792,7 @@
      Start
      ===================================================================== */
   buildMountain();buildCams();
-  cfgReady.then(function(){if(cfg.editable){mode='server';$('ownerbar').hidden=false;}else checkHash();refresh(false);});
+  cfgReady.then(function(){refresh(false);});
+  /* Kachel „Lifte & Pisten offen“ → offizieller Live-Status im Pistenplan */
+  $('st-live').addEventListener('click',function(e){e.preventDefault();$('tab-live').click();$('karte').scrollIntoView({behavior:reduceMotion?'auto':'smooth'});});
 })();

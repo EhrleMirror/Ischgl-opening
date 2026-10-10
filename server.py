@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """Ischgl Opening 2026 – kleiner Webserver ohne Abhängigkeiten.
 
-Liefert den Ordner ./public aus und speichert Änderungen aus dem
-Bearbeiten-Dialog in data.json.
+Liefert den Ordner ./public aus und holt Schneebericht und Pistendaten.
 
 Umgebungsvariablen:
-  EDIT_TOKEN  Passwort zum Bearbeiten. Leer = Bearbeiten im Browser aus.
   PORT        Port (Standard 8080)
   DATA_FILE   Pfad zur data.json (Standard ./data/data.json)
 """
@@ -348,7 +346,7 @@ class Handler(SimpleHTTPRequestHandler):
             self.wfile.write(body)
             return
         if p == "/api/config":
-            self._json(200, {"editable": bool(TOKEN), "snow": True, "pistes": True})
+            self._json(200, {"editable": False, "snow": True, "pistes": True})
             return
         if p == "/api/pistes":
             force = "force=1" in (self.path.split("?", 1)[1] if "?" in self.path else "")
@@ -367,35 +365,8 @@ class Handler(SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_POST(self):
-        if self._path() != "/api/data":
-            self._json(404, {"error": "Nicht gefunden"})
-            return
-        if not TOKEN:
-            self._json(403, {"error": "Bearbeiten ist auf diesem Server ausgeschaltet (EDIT_TOKEN fehlt)."})
-            return
-        if not hmac.compare_digest(self.headers.get("X-Edit-Token", ""), TOKEN):
-            time.sleep(1)  # bremst Raten
-            self._json(401, {"error": "Passwort falsch."})
-            return
-        try:
-            length = int(self.headers.get("Content-Length", "0"))
-        except ValueError:
-            length = 0
-        if length <= 0 or length > MAX_BYTES:
-            self._json(413, {"error": "Daten fehlen oder sind zu groß."})
-            return
-        try:
-            data = json.loads(self.rfile.read(length).decode("utf-8"))
-            if not isinstance(data, dict):
-                raise ValueError("kein Objekt")
-        except (ValueError, UnicodeDecodeError):
-            self._json(400, {"error": "Ungültige Daten."})
-            return
-        fd, tmp = tempfile.mkstemp(dir=os.path.dirname(DATA_FILE), suffix=".tmp")
-        with os.fdopen(fd, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        os.replace(tmp, DATA_FILE)
-        self._json(200, {"ok": True})
+        # Bearbeiten im Browser gibt es nicht mehr – alle Daten kommen automatisch.
+        self._json(404, {"error": "Nicht gefunden"})
 
     def log_message(self, fmt, *args):
         print("%s - %s" % (self.address_string(), fmt % args), flush=True)
@@ -411,5 +382,5 @@ if __name__ == "__main__":
                 print("Pistendaten beim Start nicht geladen:", e, flush=True)
         threading.Thread(target=_prefetch, daemon=True).start()
     httpd = ThreadingHTTPServer(("0.0.0.0", PORT), partial(Handler, directory=PUBLIC))
-    print(f"Ischgl Opening läuft auf http://0.0.0.0:{PORT}  (Bearbeiten {'an' if TOKEN else 'aus'})", flush=True)
+    print(f"Ischgl Opening läuft auf http://0.0.0.0:{PORT}", flush=True)
     httpd.serve_forever()

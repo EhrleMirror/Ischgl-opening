@@ -20,7 +20,7 @@ Trip-Seite fürs Ski-Opening in Ischgl im Après-Ski-Look: Countdown zum ersten 
 **Wetterradar:** Regen-/Schneeradar der letzten 2 Stunden von RainViewer (animiert) sowie Windy-Karten für
 Neuschnee-Prognose, 0°-Grenze und Wind.
 
-**Von Hand im Browser:** Status des Skigebiets, offene Lifte, Pisten-km und eine Ansage an die Gruppe.
+**Saisonstatus** ergibt sich aus dem Datum, offene Lifte und Pisten zeigt der offizielle Live-Status im Pistenplan.
 
 ## Installation auf Proxmox
 
@@ -36,7 +36,7 @@ Das Skript
 - lädt bei Bedarf das Debian-12-Template,
 - legt einen unprivilegierten LXC an (nächste freie ID, 1 Kern, 256 MB RAM, 2 GB, DHCP auf `vmbr0`, Autostart),
 - installiert die Seite als Dienst auf Port 8080,
-- zeigt am Ende Adresse, Passwort zum Bearbeiten und ggf. die öffentliche `https://…ts.net`-Adresse.
+- zeigt am Ende die Adresse und ggf. die öffentliche `https://…ts.net`-Adresse.
 
 Bricht die Shell-Verbindung ab (Handy im Standby), läuft das Skript weiter. Ergebnis: `tail -20 /root/ischgl-lxc.log`
 
@@ -46,7 +46,7 @@ Bricht die Shell-Verbindung ab (Handy im Standby), läuft das Skript weiter. Erg
 UPDATE=120 bash -c "$(curl -fsSL https://raw.githubusercontent.com/EhrleMirror/ischgl-opening/main/ischgl-lxc.sh)"
 ```
 
-`120` durch die Container-ID ersetzen. Daten und Passwort bleiben erhalten.
+`120` durch die Container-ID ersetzen. Einstellungen und Cloudflare-Tunnel bleiben erhalten.
 Tailscale nachrüsten: zusätzlich `TS_AUTHKEY=tskey-auth-…` davor schreiben.
 
 ### Veröffentlichen mit eigener Domain (Cloudflare Tunnel)
@@ -76,38 +76,33 @@ Vor `bash` schreiben, alle optional:
 | `BRIDGE=vmbr0` | Netzwerk-Bridge |
 | `IP=192.168.1.50/24 GW=192.168.1.1` | feste IP statt DHCP |
 | `DISK=2 RAM=256 CORES=1` | Ressourcen |
-| `EDIT_TOKEN=…` | eigenes Passwort zum Bearbeiten |
 | `TS_AUTHKEY=tskey-auth-…` | Tailscale Funnel mit Auth-Key |
 | `TAILSCALE=1` | Tailscale Funnel mit Login-Link |
 | `CF_TOKEN=eyJ…` | Cloudflare Tunnel einrichten |
 | `YES=1` | keine Rückfragen |
 
-## Daten aktualisieren
+## Wartung
 
-Seite öffnen → **Daten bearbeiten** → Passwort eingeben → Werte ändern → **Speichern**.
-Schnee und Wetter kommen automatisch. Die Felder „Schnee von Hand“ braucht es nur,
-falls der Schneebericht von ischgl.com nicht geladen werden kann.
-Im Container:
+Alles kommt automatisch, es gibt nichts von Hand zu pflegen. Im Container:
 
 ```bash
 systemctl status ischgl-opening     # Dienst
 journalctl -u ischgl-opening -f     # Log
-nano /etc/ischgl-opening.env        # Passwort/Port, danach: systemctl restart ischgl-opening
+nano /etc/ischgl-opening.env        # Port, danach: systemctl restart ischgl-opening
 ```
 
-Daten liegen in `/var/lib/ischgl-opening/data.json`.
+Zwischengespeicherte Pistendaten: `/var/lib/ischgl-opening/pistes.json`.
 
 ## Ohne Proxmox
 
-- **Docker:** `EDIT_TOKEN` in `docker-compose.yml` setzen, `docker compose up -d --build`.
-- **Python:** `EDIT_TOKEN=meinpasswort python3 server.py`
+- **Docker:** `docker compose up -d --build`.
+- **Python:** `python3 server.py`
 - **Statischer Webspace / Netlify:** Ordner `public/` hochladen. Wetter und Prognose laufen auch dort
-  automatisch, Schneebericht und Ski-Navi brauchen den Server. Bearbeiten über `…/#bearbeiten`,
-  das Formular erzeugt eine neue `data.json` zum Ersetzen.
+  automatisch, Schneebericht und Ski-Navi brauchen den Server.
 
 ## Hinweise
 
-- Ändert ischgl.com den Aufbau des Schneeberichts, zeigt die Seite einen Hinweis und die Werte von Hand.
+- Ändert ischgl.com den Aufbau des Schneeberichts, zeigt die Seite statt der Schneepegel einen Hinweis.
   Die Ursache steht im Log: `journalctl -u ischgl-opening -n 50`.
 - Das Ski-Navi kennt keine Sperrungen, Lawinengefahr oder Pistenzustand. Qualität der Route = Qualität der
   OpenStreetMap-Daten. Pistendaten neu holen: `rm /var/lib/ischgl-opening/pistes.json && systemctl restart ischgl-opening`.
