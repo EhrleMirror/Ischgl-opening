@@ -585,7 +585,7 @@
   }
   function initNavi2(){
     if(!cfg.pistes){mapMsg('navi-msg','<span>Ski-Navi braucht den Server</span><small>Läuft die Seite auf einem reinen Webspace, fehlen die Pistendaten. Den offiziellen Live-Pistenplan gibt es im zweiten Tab.</small>');return;}
-    Promise.all([loadLeaflet(),getJSON('api/pistes',{cache:'default'})]).then(function(r){
+    Promise.all([loadLeaflet(),getJSON('api/pistes'+(NV.retry?'?force=1':''),{cache:NV.retry?'no-store':'default'})]).then(function(r){
       var L=r[0],data=r[1];NV.data=data;
       NV.g=buildGraph(data.ways);
       NV.map=L.map('navi-map',{zoomControl:true,attributionControl:true,tap:true});
@@ -602,7 +602,7 @@
     }).catch(function(e){
       NV.started=false;console.warn('Ski-Navi:',e);
       mapMsg('navi-msg','<span>Pistendaten nicht geladen</span><small>'+esc(e.message)+'</small><button class="btn small hot" type="button" id="nv-retry">Nochmal</button>');
-      $('nv-retry').addEventListener('click',function(){mapMsg('navi-msg','<span>Lade Pisten &amp; Lifte …</span>',true);initNavi();});
+      $('nv-retry').addEventListener('click',function(){NV.retry=true;mapMsg('navi-msg','<span>Lade Pisten &amp; Lifte …</span><small>Fragt jetzt mehrere OpenStreetMap-Server nacheinander. Bis zu 2 Minuten.</small>',true);initNavi();});
     });
   }
   $('nv-from').addEventListener('change',function(e){var x=nodeFromValue(e.target.value);if(x)setPoint('a',x,true);});

@@ -49,6 +49,21 @@ UPDATE=120 bash -c "$(curl -fsSL https://raw.githubusercontent.com/EhrleMirror/i
 `120` durch die Container-ID ersetzen. Daten und Passwort bleiben erhalten.
 Tailscale nachrüsten: zusätzlich `TS_AUTHKEY=tskey-auth-…` davor schreiben.
 
+### Veröffentlichen mit eigener Domain (Cloudflare Tunnel)
+
+1. Cloudflare-Dashboard → **Networking → Tunnels → Create a tunnel**, Namen vergeben, **Create Tunnel**.
+2. Bei „Debian“ den angezeigten Befehl kopieren (enthält den Token `eyJ…`).
+3. Auf dem Proxmox-Host (`113` = Container-ID, Befehl/Token einfügen):
+   ```bash
+   CF_TOKEN='eyJ…' UPDATE=113 bash -c "$(curl -fsSL https://raw.githubusercontent.com/EhrleMirror/ischgl-opening/main/ischgl-lxc.sh)"
+   ```
+4. Zurück im Dashboard **Continue**, dann beim Tunnel **Routes → Add route → Published application**:
+   Subdomain (z. B. `ischgl`), Domain wählen, **Service URL** `http://localhost:8080`, **Add route**.
+
+Die Seite läuft dann unter `https://ischgl.deine-domain.de` mit HTTPS (GPS im Ski-Navi funktioniert).
+Optional nur für die Kollegen freigeben: Cloudflare **Access** → Application für die Subdomain mit
+E-Mail-Liste (Einmal-Code per Mail).
+
 ### Optionen
 
 Vor `bash` schreiben, alle optional:
@@ -64,6 +79,7 @@ Vor `bash` schreiben, alle optional:
 | `EDIT_TOKEN=…` | eigenes Passwort zum Bearbeiten |
 | `TS_AUTHKEY=tskey-auth-…` | Tailscale Funnel mit Auth-Key |
 | `TAILSCALE=1` | Tailscale Funnel mit Login-Link |
+| `CF_TOKEN=eyJ…` | Cloudflare Tunnel einrichten |
 | `YES=1` | keine Rückfragen |
 
 ## Daten aktualisieren

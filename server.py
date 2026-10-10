@@ -113,8 +113,11 @@ def get_snow(force=False):
 PISTE_BBOX = os.environ.get("PISTE_BBOX", "46.895,10.225,46.995,10.43")  # S,W,N,O
 OVERPASS_URLS = [u for u in os.environ.get(
     "OVERPASS_URLS",
-    "https://overpass-api.de/api/interpreter,https://overpass.kumi.systems/api/interpreter",
+    "https://overpass-api.de/api/interpreter,"
+    "https://overpass.private.coffee/api/interpreter,"
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
 ).split(",") if u]
+CONTACT = os.environ.get("CONTACT_URL", "https://github.com/EhrleMirror/ischgl-opening")
 ELEVATION_URL = os.environ.get("ELEVATION_URL", "https://api.open-meteo.com/v1/elevation")
 PISTE_TTL = 7 * 86400
 PISTE_ERR_TTL = 10 * 60
@@ -130,30 +133,41 @@ def piste_file():
 
 def _http_json(url, data=None, timeout=120):
     req = urllib.request.Request(url, data=data, headers={
-        "User-Agent": "IschglOpening/1.0 (private trip page)",
-        "Accept": "application/json",
+        "User-Agent": "IschglOpening/1.1 (private ski trip page; +%s)" % CONTACT,
+        "Referer": CONTACT,
+        "Accept": "*/*",
     })
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.loads(r.read(60_000_000).decode("utf-8"))
 
 
 def _fetch_overpass():
+    # Wege mit Geometrie, Relationen nur mit Mitgliederliste (spart Last)
     q = (
-        "[out:json][timeout:120];("
+        "[out:json][timeout:90];"
+        "("
         'way["piste:type"="downhill"](%(b)s);'
         'way["aerialway"](%(b)s);'
-        'relation["piste:type"="downhill"](%(b)s);'
-        ");out geom;" % {"b": PISTE_BBOX}
+        ");out geom;"
+        'relation["piste:type"="downhill"](%(b)s);out body;' % {"b": PISTE_BBOX}
     )
     body = urllib.parse.urlencode({"data": q}).encode()
-    last = None
+    errors = []
     for url in OVERPASS_URLS:
+        host = urllib.parse.urlparse(url).netloc
         try:
-            return _http_json(url, data=body, timeout=150)
+            data = _http_json(url, data=body, timeout=120)
+            if not data.get("elements"):
+                raise ValueError("leere Antwort" + (": " + data["remark"] if data.get("remark") else ""))
+            print("Pistendaten von %s geladen" % host, flush=True)
+            return data
         except Exception as e:
-            last = e
-            print("Overpass %s: %s" % (url, e), flush=True)
-    raise RuntimeError("OpenStreetMap-Daten nicht abrufbar (%s)" % last)
+            msg = getattr(e, "reason", None) or str(e)
+            if hasattr(e, "code"):
+                msg = "HTTP %s" % e.code
+            errors.append("%s: %s" % (host, msg))
+            print("Overpass %s: %s" % (host, e), flush=True)
+    raise RuntimeError("OpenStreetMap-Daten nicht abrufbar – " + "; ".join(errors))
 
 
 def _elevations(points):
@@ -260,10 +274,13 @@ def get_pistes(force=False):
     if fresh and not force:
         return cached
     now = time.time()
-    if _piste_state["err"] and now - _piste_state["err_t"] < PISTE_ERR_TTL:
+    # "Nochmal" (force) darf frühestens nach 60 s neu anfragen, sonst gilt die Fehlerpause
+    pause = 60 if force else PISTE_ERR_TTL
+    if _piste_state["err"] and now - _piste_state["err_t"] < pause:
         if cached:
             return dict(cached, stale=True)
-        raise RuntimeError(_piste_state["err"])
+        wait = int(pause - (now - _piste_state["err_t"]))
+        raise RuntimeError("%s (neuer Versuch in %d s möglich)" % (_piste_state["err"], wait))
     with _piste_lock:  # nur ein Abruf gleichzeitig
         if os.path.exists(path) and cached is None:
             with open(path, encoding="utf-8") as f:
@@ -334,8 +351,9 @@ class Handler(SimpleHTTPRequestHandler):
             self._json(200, {"editable": bool(TOKEN), "snow": True, "pistes": True})
             return
         if p == "/api/pistes":
+            force = "force=1" in (self.path.split("?", 1)[1] if "?" in self.path else "")
             try:
-                self._json(200, get_pistes())
+                self._json(200, get_pistes(force and not os.path.exists(piste_file())))
             except Exception as e:
                 self._json(502, {"ok": False, "error": str(e)})
             return

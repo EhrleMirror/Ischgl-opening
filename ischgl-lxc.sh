@@ -22,6 +22,7 @@
 #      EDIT_TOKEN=...      eigenes Passwort zum Bearbeiten (sonst zufällig)
 #      TAILSCALE=1         Tailscale installieren und Funnel auf Port 8080 einschalten
 #      TS_AUTHKEY=tskey-…  Tailscale-Schlüssel, dann ohne Login-Link (gut fürs Handy)
+#      CF_TOKEN=eyJ…       Cloudflare-Tunnel-Token: veröffentlicht die Seite über deine Domain
 #      UPDATE=120          bestehenden Container aktualisieren statt neu anlegen
 #      YES=1               keine Rückfragen
 #
@@ -40,6 +41,8 @@ RAM="${RAM:-256}"
 CORES="${CORES:-1}"
 TAILSCALE="${TAILSCALE:-0}"
 TS_AUTHKEY="${TS_AUTHKEY:-}"
+CF_TOKEN="${CF_TOKEN:-}"
+CF_TOKEN="${CF_TOKEN##* }"   # falls der ganze Befehl aus dem Dashboard eingefügt wurde
 [ -n "$TS_AUTHKEY" ] && TAILSCALE=1
 YES="${YES:-0}"
 REPO_RAW="${REPO_RAW:-https://raw.githubusercontent.com/EhrleMirror/ischgl-opening/main}"
@@ -132,6 +135,32 @@ setup_tailscale() {
   fi
 }
 
+setup_cloudflared() {
+  case "$CF_TOKEN" in eyJ*) ;; *) warn "CF_TOKEN sieht nicht wie ein Tunnel-Token aus (beginnt mit eyJ…). Übersprungen."; return 0;; esac
+  msg "Installiere Cloudflare Tunnel (cloudflared) im Container …"
+  ct_exec bash -c 'set -e; export DEBIAN_FRONTEND=noninteractive
+    apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null
+    mkdir -p --mode=0755 /usr/share/keyrings
+    curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg -o /usr/share/keyrings/cloudflare-main.gpg
+    echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main" > /etc/apt/sources.list.d/cloudflared.list
+    apt-get update -qq && apt-get install -y -qq cloudflared >/dev/null' \
+    || { warn "cloudflared konnte nicht installiert werden."; return 0; }
+  if ct_exec test -f /etc/systemd/system/cloudflared.service; then
+    msg "Ersetze bestehende Tunnel-Verbindung …"
+    ct_exec cloudflared service uninstall >/dev/null 2>&1 || true
+  fi
+  ct_exec cloudflared service install "$CF_TOKEN" >/dev/null 2>&1 \
+    || { warn "Tunnel-Dienst konnte nicht eingerichtet werden. Token prüfen."; return 0; }
+  sleep 4
+  if ct_exec systemctl is-active --quiet cloudflared; then
+    ok "Cloudflare Tunnel läuft"
+    CF_OK=1
+  else
+    warn "Tunnel-Dienst läuft nicht. Log: pct exec $CTID -- journalctl -u cloudflared -n 30"
+  fi
+}
+CF_OK=0
+
 # ---------------------------------------------------------------------
 #  Update eines bestehenden Containers
 # ---------------------------------------------------------------------
@@ -151,7 +180,13 @@ if [ -n "${UPDATE:-}" ]; then
   wait_for_network
   run_installer
   if [ "$TAILSCALE" = 1 ]; then setup_tailscale; fi
+  if [ -n "$CF_TOKEN" ]; then setup_cloudflared; fi
   ok "Update fertig."
+  if [ "$CF_OK" = 1 ]; then
+    echo
+    echo "  Jetzt im Cloudflare-Dashboard beim Tunnel: Routes → Add route → Published application"
+    echo "  Subdomain + Domain wählen, Service URL: http://localhost:8080"
+  fi
   exit 0
 fi
 
@@ -249,6 +284,9 @@ run_installer
 
 if [ "$TAILSCALE" = 1 ]; then
   setup_tailscale
+fi
+if [ -n "$CF_TOKEN" ]; then
+  setup_cloudflared
 fi
 
 IPADDR=$(ct_exec sh -c "hostname -I | awk '{print \$1}'" 2>/dev/null || true)
