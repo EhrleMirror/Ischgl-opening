@@ -71,7 +71,7 @@ if [ -f "$0" ] && grep -q '^__INSTALLER_BELOW__$' "$0" 2>/dev/null; then
   awk 'f{print} /^__INSTALLER_BELOW__$/{f=1}' "$0" | base64 -d > "$TMP/install-ischgl.sh"
   RUN_CMD="bash $(readlink -f "$0")"
 else
-  curl -fsSL "$REPO_RAW/install-ischgl.sh" -o "$TMP/install-ischgl.sh" \
+  curl -fsSL -H "Cache-Control: no-cache" "$REPO_RAW/install-ischgl.sh?nocache=$(date +%s)" -o "$TMP/install-ischgl.sh" \
     || fail "Installer konnte nicht geladen werden: $REPO_RAW/install-ischgl.sh"
   RUN_CMD="bash -c \"\$(curl -fsSL $REPO_RAW/ischgl-lxc.sh)\""
 fi

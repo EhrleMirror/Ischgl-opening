@@ -793,6 +793,7 @@
      ===================================================================== */
   buildMountain();buildCams();
   cfgReady.then(function(){refresh(false);});
+  fetch('version.txt',{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){if(t&&t.length<40)$('ver').textContent='Version '+t.trim();}).catch(function(){});
   /* Kachel „Lifte & Pisten offen“ → offizieller Live-Status im Pistenplan */
   $('st-live').addEventListener('click',function(e){e.preventDefault();$('tab-live').click();$('karte').scrollIntoView({behavior:reduceMotion?'auto':'smooth'});});
 })();
