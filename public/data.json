@@ -1,0 +1,81 @@
+{
+  "updated": "09.10.2026, 14:20",
+  "status": "closed",
+  "statusNote": "öffnet 26.11.2026",
+  "snowTop": 0,
+  "snowValley": 0,
+  "newSnow": 0,
+  "liftsOpen": 0,
+  "liftsTotal": 46,
+  "slopesOpen": 0,
+  "slopesTotal": 239,
+  "groupNote": "",
+  "forecast": {
+    "title": "Nullgradgrenze · 6 Tage",
+    "source": "snow-forecast.com, Mittelstation 2.126 m",
+    "issued": "09.10.2026, 07:00",
+    "comment": "Schnee bleibt nur liegen, wenn die Nullgradgrenze unter die Pisten fällt. Aktuell liegt sie fast durchgehend über dem Gipfel. Nennenswerter Neuschnee ist erst ab ca. 21.10. angedeutet.",
+    "rows": [
+      {
+        "d": "Fr",
+        "dt": "09.10.",
+        "lo": 2950,
+        "hi": 3200,
+        "snow": 0,
+        "mm": 0,
+        "tmin": 3,
+        "tmax": 8
+      },
+      {
+        "d": "Sa",
+        "dt": "10.10.",
+        "lo": 2450,
+        "hi": 2800,
+        "snow": 0,
+        "mm": 3,
+        "tmin": 2,
+        "tmax": 5
+      },
+      {
+        "d": "So",
+        "dt": "11.10.",
+        "lo": 2550,
+        "hi": 2950,
+        "snow": 0,
+        "mm": 0,
+        "tmin": 1,
+        "tmax": 6
+      },
+      {
+        "d": "Mo",
+        "dt": "12.10.",
+        "lo": 2550,
+        "hi": 2800,
+        "snow": 0,
+        "mm": 4,
+        "tmin": 1,
+        "tmax": 4
+      },
+      {
+        "d": "Di",
+        "dt": "13.10.",
+        "lo": 3350,
+        "hi": 3550,
+        "snow": 0,
+        "mm": 1,
+        "tmin": 5,
+        "tmax": 9
+      },
+      {
+        "d": "Mi",
+        "dt": "14.10.",
+        "lo": 3550,
+        "hi": 3700,
+        "snow": 0,
+        "mm": 1,
+        "tmin": 7,
+        "tmax": 11
+      }
+    ]
+  }
+}
