@@ -1,7 +1,16 @@
 # Ischgl Opening 2026
 
-Trip-Seite fürs Ski-Opening in Ischgl: Countdown zum Konzert, Schneestand, Prognose,
-16 eingebettete Webcams, Tickets, Anreise, Packliste.
+Trip-Seite fürs Ski-Opening in Ischgl: Countdown zum ersten Lift, Live-Schneelage,
+Nullgradgrenze als Berg-Grafik, 16 eingebettete Webcams, Tickets, Anreise, Packliste.
+
+**Automatisch bei jedem Öffnen (und per „Aktualisieren“):**
+
+- Schneehöhen und Neuschnee der Messstationen Idalp, Alp Trida und Samnaun Dorf –
+  der Server liest den offiziellen Schneebericht von ischgl.com (20 Minuten Zwischenspeicher).
+- Temperaturen, Nullgradgrenze und 7-Tage-Schneeprognose von [Open-Meteo](https://open-meteo.com) (kostenlos, ohne Schlüssel).
+- Webcam-Bilder direkt von ischgl.com, alle 5 Minuten neu.
+
+**Von Hand im Browser:** Status des Skigebiets, offene Lifte, Pisten-km und eine Ansage an die Gruppe.
 
 ## Installation auf Proxmox
 
@@ -49,7 +58,9 @@ Vor `bash` schreiben, alle optional:
 
 ## Daten aktualisieren
 
-Seite öffnen → **Daten aktualisieren** → Passwort eingeben → Werte ändern → **Speichern**.
+Seite öffnen → **Daten bearbeiten** → Passwort eingeben → Werte ändern → **Speichern**.
+Schnee und Wetter kommen automatisch. Die Felder „Schnee von Hand“ braucht es nur,
+falls der Schneebericht von ischgl.com nicht geladen werden kann.
 Im Container:
 
 ```bash
@@ -64,11 +75,14 @@ Daten liegen in `/var/lib/ischgl-opening/data.json`.
 
 - **Docker:** `EDIT_TOKEN` in `docker-compose.yml` setzen, `docker compose up -d --build`.
 - **Python:** `EDIT_TOKEN=meinpasswort python3 server.py`
-- **Statischer Webspace / Netlify:** Ordner `public/` hochladen. Bearbeiten über `…/#bearbeiten`,
+- **Statischer Webspace / Netlify:** Ordner `public/` hochladen. Wetter und Prognose laufen auch dort
+  automatisch, der offizielle Schneebericht braucht den Server. Bearbeiten über `…/#bearbeiten`,
   das Formular erzeugt eine neue `data.json` zum Ersetzen.
 
 ## Hinweise
 
+- Ändert ischgl.com den Aufbau des Schneeberichts, zeigt die Seite einen Hinweis und die Werte von Hand.
+  Die Ursache steht im Log: `journalctl -u ischgl-opening -n 50`.
 - Webcam-Bilder kommen direkt von ischgl.com. Sperrt die Seite das Einbinden, zeigt die Kachel
   „Bild nicht verfügbar“ und „Live ↗“ führt zur Kamera.
 - `install-ischgl.sh` ist der Installer, der im Container läuft. Er wird aus den Dateien

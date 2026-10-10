@@ -5,325 +5,393 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Ischgl Opening 2026</title>
 <meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#06122a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* Standalone build. Layout: one narrow column like a trail-map leaflet; hero is a lift ticket with countdown, then status, webcams, live links, plan, tickets, travel. Data lives in data.json and is edited in place. */
+/* Ski-race graphics: night-sky hero with snowfall and ridgelines, slanted race-bib type,
+   signal-orange as the one loud colour, everything else glacier blue and snow. */
 :root{
-  --bg:#eef3f6;--paper:#ffffff;--ink:#0f1d2a;--muted:#566776;--line:#cfdbe3;
-  --accent:#c8102e;--accent-ink:#ffffff;--piste-blue:#1f5fbf;
-  --ok:#1e7a4a;--warn:#b26a00;--off:#7a8794;--chip:#e3ebf1;--bar-strong:#2f6fa8;
-  --cam-a:#d7e4ee;--cam-b:#b9cfdf;--overlay:rgba(10,20,30,.62);
+  --bg:#edf3f9;            /* snow haze */
+  --paper:#ffffff;
+  --ink:#08162b;
+  --muted:#4f6379;
+  --line:#d3dfea;
+  --chip:#e3ecf5;
+  --accent:#ff5a1f;        /* piste marker orange */
+  --accent-ink:#ffffff;
+  --ice:#0c8fd6;           /* glacier blue */
+  --ok:#14915a; --warn:#c77700; --off:#7d8ea1;
+  /* hero + mountain (night sky, fixed look) */
+  --night:#06122a; --night-2:#0c2650; --night-ink:#eef6ff; --night-muted:#9db4d2;
+  --sky-top:#cfe6f7; --sky-bot:#f4f9fd;
+  --ridge-back:#b9cde0; --rock:#7f8f86; --rock-2:#66756d; --snow:#ffffff; --snow-shade:#dfeaf4;
+  --zero:#ff5a1f; --snowline:#0c8fd6;
   --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
   --body:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0b1520;--paper:#122130;--ink:#e6eef4;--muted:#94a7b6;--line:#24384a;
-  --accent:#ff4d5e;--accent-ink:#1a0306;--piste-blue:#5b9bff;
-  --ok:#4fc788;--warn:#f0a83a;--off:#7f91a0;--chip:#1b2f42;--bar-strong:#7db6ea;
-  --cam-a:#17293a;--cam-b:#1f3a52;--overlay:rgba(4,10,16,.7);color-scheme:dark}}
+  --bg:#050e1f;--paper:#0c1c34;--ink:#e9f2fc;--muted:#93a9c4;--line:#1b3253;--chip:#13284a;
+  --accent:#ff6a33;--accent-ink:#1a0600;--ice:#4cc2ff;--ok:#3fd18b;--warn:#f2aa3c;--off:#7f93ab;
+  --sky-top:#071733;--sky-bot:#123461;--ridge-back:#1b3760;--rock:#3a4d5e;--rock-2:#2c3d4d;--snow:#eef6ff;--snow-shade:#c9d9ea;
+  --zero:#ff6a33;--snowline:#4cc2ff;color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0b1520;--paper:#122130;--ink:#e6eef4;--muted:#94a7b6;--line:#24384a;
-  --accent:#ff4d5e;--accent-ink:#1a0306;--piste-blue:#5b9bff;
-  --ok:#4fc788;--warn:#f0a83a;--off:#7f91a0;--chip:#1b2f42;--bar-strong:#7db6ea;
-  --cam-a:#17293a;--cam-b:#1f3a52;--overlay:rgba(4,10,16,.7);color-scheme:dark}
+  --bg:#050e1f;--paper:#0c1c34;--ink:#e9f2fc;--muted:#93a9c4;--line:#1b3253;--chip:#13284a;
+  --accent:#ff6a33;--accent-ink:#1a0600;--ice:#4cc2ff;--ok:#3fd18b;--warn:#f2aa3c;--off:#7f93ab;
+  --sky-top:#071733;--sky-bot:#123461;--ridge-back:#1b3760;--rock:#3a4d5e;--rock-2:#2c3d4d;--snow:#eef6ff;--snow-shade:#c9d9ea;
+  --zero:#ff6a33;--snowline:#4cc2ff;color-scheme:dark}
 
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);padding-inline:16px;padding-block:calc(20px + env(safe-area-inset-top,0px)) calc(48px + env(safe-area-inset-bottom,0px))}
-.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1;letter-spacing:.01em}
-h2{font-size:clamp(28px,6vw,38px);font-weight:800;text-transform:uppercase}
-h3{font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
-p{margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+img{max-width:100%}
 a{color:inherit}
-.eyebrow{font:500 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
-.section{display:flex;flex-direction:column;gap:16px}
-.section-head{display:flex;flex-direction:column;gap:8px}
-.lead{color:var(--muted);max-width:62ch}
+p{margin:0}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:.95;text-wrap:balance}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--ice);outline-offset:2px;border-radius:4px}
 .num{font-variant-numeric:tabular-nums}
 .stamp{font:400 12px/1.4 var(--mono);color:var(--muted)}
-:focus-visible{outline:3px solid var(--piste-blue);outline-offset:2px;border-radius:4px}
-button{font:inherit;color:inherit}
-.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px/1 var(--body);padding:11px 14px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.btn.small{font-size:12px;padding:7px 10px}
-.btn:disabled{opacity:.55;cursor:default}
+.eyebrow{font:600 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}
+.slant{display:inline-block;transform:skewX(-9deg)}
 
-/* Owner bar */
-.ownerbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.ownerbar p{font-size:14px;color:var(--muted)}
-.ownerbar .btns{display:flex;gap:8px;flex-wrap:wrap}
-body.editing .ownerbar{border-color:var(--accent)}
+/* ---------- HERO ---------- */
+.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--night) 0%,var(--night-2) 78%,#174a86 100%);color:var(--night-ink);padding-top:env(safe-area-inset-top,0px)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-ridges{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:auto;display:block}
+.hero-inner{position:relative;max-width:980px;margin:0 auto;padding:28px 16px 70px;display:flex;flex-direction:column;gap:18px}
+.hero-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--night-muted)}
+.hero-top b{color:var(--night-ink);font-weight:600}
+.hero h1{font-size:clamp(78px,22vw,190px);font-weight:900;letter-spacing:-.01em;text-transform:uppercase;line-height:.82;transform:skewX(-9deg);transform-origin:left bottom;
+  background:linear-gradient(180deg,#ffffff 0%,#dff1ff 55%,#9fd3ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 24px rgba(0,0,0,.35))}
+.hero-sub{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hero-sub .tag{font:900 clamp(26px,6.5vw,44px)/1 var(--display);text-transform:uppercase;letter-spacing:.02em;background:var(--accent);color:#fff;padding:6px 14px 4px;transform:skewX(-9deg)}
+.hero-sub .tag span{display:inline-block;transform:skewX(9deg)}
+.hero-sub .hero-facts{font:500 13px/1.3 var(--mono);color:var(--night-muted);letter-spacing:.04em}
+.clock{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.clock .digits{font:600 clamp(30px,8vw,52px)/1 var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:8px 12px;border-radius:8px;backdrop-filter:blur(4px)}
+.clock .digits small{font-size:.42em;color:var(--night-muted);margin:0 2px 0 1px;letter-spacing:.06em}
+.clock .lbl{font:600 12px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--night-muted);padding-bottom:6px}
+.ticker{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:760px}
+@media (max-width:620px){.ticker{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tick{background:rgba(6,18,42,.55);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0;backdrop-filter:blur(6px)}
+.tick small{font:600 10.5px/1.1 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--night-muted)}
+.tick b{font:800 26px/1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tick b em{font-style:normal;font-size:.6em;color:var(--night-muted);margin-left:2px}
+.tick.hot{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
 
-/* Hero: lift ticket */
-.ticket{background:var(--accent);color:var(--accent-ink);border-radius:14px;position:relative;overflow:hidden}
-.ticket::before,.ticket::after{content:"";position:absolute;width:26px;height:26px;border-radius:50%;background:var(--bg);top:calc(62% - 13px)}
-.ticket::before{left:-13px}.ticket::after{right:-13px}
-.ticket-top{padding:22px 22px 18px;display:flex;flex-direction:column;gap:14px}
-.ticket-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font:500 12px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;opacity:.9}
-.ticket h1{font-size:clamp(46px,13vw,92px);font-weight:900;text-transform:uppercase}
-.ticket h1 span{display:block;font-size:.42em;font-weight:600;letter-spacing:.06em;opacity:.92;margin-top:6px}
-.count{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:440px}
-.count div{display:flex;flex-direction:column;gap:2px}
-.count b{font:900 clamp(34px,9vw,52px)/1 var(--display);font-variant-numeric:tabular-nums}
-.count small{font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;opacity:.85}
-.ticket-bottom{border-top:2px dashed color-mix(in srgb,var(--accent-ink) 45%,transparent);padding:16px 22px 20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.ticket-bottom div{display:flex;flex-direction:column;gap:3px;min-width:0}
-.ticket-bottom small{font:500 11px/1.1 var(--mono);letter-spacing:.1em;text-transform:uppercase;opacity:.85}
-.ticket-bottom strong{font:800 20px/1.1 var(--display);text-transform:uppercase}
-.ticket-bottom span{font-size:13px;opacity:.95}
-@media (max-width:520px){.ticket-bottom{grid-template-columns:1fr}}
+/* ---------- STICKY NAV ---------- */
+.nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.nav-inner{max-width:980px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav a{flex:none;text-decoration:none;font:700 13px/1 var(--body);text-transform:uppercase;letter-spacing:.06em;padding:14px 10px;color:var(--muted);border-bottom:3px solid transparent}
+.nav a:hover,.nav a.on{color:var(--ink);border-bottom-color:var(--accent)}
 
-/* Status */
-.panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px}
-.status-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.status-grid > div{background:var(--paper);padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
-.status-grid b{font:800 34px/1 var(--display);font-variant-numeric:tabular-nums}
-.status-grid b span{font-size:.5em}
-.status-grid small{font:500 11px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-@media (max-width:460px){.status-grid{grid-template-columns:1fr 1fr}}
-.pill{display:inline-flex;align-items:center;gap:6px;font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:6px 9px;border-radius:999px;background:var(--chip);color:var(--ink);width:max-content;max-width:100%}
-.pill i{width:8px;height:8px;border-radius:50%;background:var(--off);flex:none}
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:28px 56px;display:flex;flex-direction:column;gap:56px}
+.section{display:flex;flex-direction:column;gap:18px}
+.section-head{display:flex;flex-direction:column;gap:10px}
+.section-head h2{font-size:clamp(36px,8vw,58px);font-weight:900;text-transform:uppercase;transform:skewX(-9deg);transform-origin:left bottom;width:max-content;max-width:100%}
+.section-head h2::after{content:"";display:block;height:6px;width:64px;background:var(--accent);margin-top:8px}
+.section-head .row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.lead{color:var(--muted);max-width:64ch}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 14px/1 var(--body);padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.small{font-size:12px;padding:8px 10px}
+.btn:disabled{opacity:.6;cursor:default}
+.btn svg{width:16px;height:16px;flex:none}
+.btn.spin svg{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.ownerbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px dashed var(--accent);border-radius:12px;padding:10px 12px}
+.ownerbar p{font-size:14px;color:var(--muted);max-width:60ch}
+.note{background:var(--accent);color:#fff;padding:14px 18px;border-radius:12px;font-weight:600;white-space:pre-line;position:relative}
+.note::before{content:"Ansage";display:block;font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin-bottom:6px}
+
+/* ---------- LIVE STATUS ---------- */
+.live-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.live-dot{display:inline-flex;align-items:center;gap:8px;font:500 12px/1.3 var(--mono);color:var(--muted)}
+.live-dot i{width:9px;height:9px;border-radius:50%;background:var(--off);flex:none}
+.live-dot.on i{background:var(--ok);box-shadow:0 0 0 0 var(--ok);animation:pulse 2s infinite}
+.live-dot.err i{background:var(--warn)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 60%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
+
+.stakes-wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px}
+@media (max-width:760px){.stakes-wrap{grid-template-columns:1fr}}
+.stakes{display:flex;flex-direction:column;gap:12px}
+.stakes-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}
+.stake{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+.stake svg{width:100%;max-width:120px;height:auto;display:block}
+.stake .val{font:900 34px/1 var(--display);font-variant-numeric:tabular-nums}
+.stake .val em{font-style:normal;font-size:.5em;color:var(--muted)}
+.stake .name{font-weight:700;font-size:14px;text-align:center;line-height:1.2}
+.stake .alt{font:400 11px/1 var(--mono);color:var(--muted)}
+.stake .fresh{font:700 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:4px 6px;border-radius:4px;background:var(--chip);color:var(--muted)}
+.stake .fresh.hot{background:var(--accent);color:#fff}
+
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;align-content:start}
+.tiles>div{background:var(--paper);padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.tiles small{font:600 10.5px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tiles b{font:800 30px/1 var(--display);font-variant-numeric:tabular-nums}
+.tiles b span{font-size:.55em;color:var(--muted)}
+.tiles .wide{grid-column:1/-1}
+.pill{display:inline-flex;align-items:center;gap:7px;font:700 13px/1 var(--body);padding:7px 10px;border-radius:999px;background:var(--chip);width:max-content;max-width:100%}
+.pill i{width:9px;height:9px;border-radius:50%;background:var(--off);flex:none}
 .pill.open i{background:var(--ok)}.pill.partial i{background:var(--warn)}
-.note{border-left:4px solid var(--accent);background:var(--paper);padding:12px 16px;border-radius:0 10px 10px 0;white-space:pre-line}
-.loading [data-live]{opacity:.45}
 
-/* Freezing level chart */
-.fl{display:flex;flex-direction:column;gap:10px}
-.fl-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font:400 12px/1.3 var(--mono);color:var(--muted)}
-.fl-legend span{display:inline-flex;align-items:center;gap:6px}
-.fl-legend i{display:inline-block;width:14px;height:0;border-top:2px solid}
-.fl-rows{display:flex;flex-direction:column;gap:6px}
-.fl-row,.fl-axis{display:grid;grid-template-columns:62px minmax(0,1fr) 100px;gap:10px;align-items:center}
-.fl-day{font:600 13px/1.2 var(--body)}
-.fl-day small{display:block;font:400 11px/1.2 var(--mono);color:var(--muted)}
-.fl-track{position:relative;height:22px;background:var(--chip);border-radius:4px}
-.fl-bar{position:absolute;top:4px;bottom:4px;background:var(--bar-strong);border-radius:3px;min-width:3px}
-.fl-ref{position:absolute;top:-3px;bottom:-3px;border-left:2px solid}
-.fl-ref.mid{border-color:var(--piste-blue)}.fl-ref.top{border-color:var(--accent)}
-.fl-side{font:400 12px/1.3 var(--mono);color:var(--muted);text-align:right}
-.fl-side b{color:var(--ink);font-weight:500}
-.fl-axis div{position:relative;height:16px;font:400 11px/1 var(--mono);color:var(--muted)}
-.fl-axis span{position:absolute;transform:translateX(-50%)}
-.fl-axis span:first-child{transform:none}.fl-axis span:last-child{transform:translateX(-100%)}
-@media (max-width:460px){.fl-row,.fl-axis{grid-template-columns:46px minmax(0,1fr) 78px;gap:8px}}
+/* ---------- MOUNTAIN ---------- */
+.mtn{display:flex;flex-direction:column;gap:14px;padding:0;overflow:hidden}
+.mtn-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;padding:18px 18px 0}
+.verdict{display:flex;flex-direction:column;gap:4px}
+.verdict b{font:900 clamp(26px,5.5vw,38px)/1 var(--display);text-transform:uppercase;transform:skewX(-9deg);transform-origin:left bottom}
+.verdict span{color:var(--muted);font-size:14px;max-width:52ch}
+.badge{font:800 13px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;padding:7px 10px 6px;background:var(--accent);color:#fff;transform:skewX(-9deg);white-space:nowrap}
+.mtn-svg{display:block;width:100%;height:auto;max-width:100%}
+.mtn-svg text{font-family:var(--mono)}
+.mtn-svg .snowcap,.mtn-svg .zero,.mtn-svg .sline{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.flake{animation:fall linear infinite}
+.drop{animation:rain linear infinite}
+@keyframes fall{from{transform:translate(0,-40px)}to{transform:translate(14px,420px)}}
+@keyframes rain{from{transform:translate(0,-30px)}to{transform:translate(-6px,420px)}}
+.days{display:flex;gap:8px;overflow-x:auto;padding:0 18px 18px;scrollbar-width:thin}
+.daybtn{flex:1 0 92px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border-radius:12px;border:1px solid var(--line);background:var(--bg);cursor:pointer;min-width:92px}
+.daybtn .dn{font:800 15px/1 var(--display);text-transform:uppercase;letter-spacing:.04em}
+.daybtn .dd{font:400 10.5px/1 var(--mono);color:var(--muted)}
+.daybtn svg{width:28px;height:28px}
+.daybtn .t{font:600 12px/1 var(--mono);font-variant-numeric:tabular-nums}
+.daybtn .sn{font:700 11px/1 var(--mono);color:var(--muted)}
+.daybtn .sn.hot{color:var(--accent)}
+.daybtn[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;background:var(--paper)}
+.mtn-foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:0 18px 16px}
 
-/* Webcams */
+/* ---------- WEBCAMS ---------- */
 .camgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
 @media (max-width:480px){.camgrid{grid-template-columns:1fr 1fr;gap:8px}}
-.cam{position:relative;border-radius:10px;overflow:hidden;background:var(--paper);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
-.cam-media{position:relative;aspect-ratio:16/10;max-width:100%;background:linear-gradient(160deg,var(--cam-a),var(--cam-b));display:block;text-decoration:none}
-.cam-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cam{position:relative;border-radius:12px;overflow:hidden;background:var(--paper);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.cam-media{position:relative;aspect-ratio:16/10;max-width:100%;background:linear-gradient(160deg,var(--sky-top),var(--sky-bot));display:block;text-decoration:none}
+button.cam-media{cursor:zoom-in;border:0;padding:0;width:100%;text-align:left;font:inherit;color:inherit}
+.cam-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.cam:hover .cam-media img{transform:scale(1.04)}
 .cam-empty{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;gap:2px;color:var(--ink)}
 .cam-empty b{font:900 clamp(26px,6vw,34px)/1 var(--display);font-variant-numeric:tabular-nums}
 .cam-empty span{font:500 11px/1.2 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.cam-time{position:absolute;left:8px;top:8px;font:500 11px/1 var(--mono);background:var(--overlay);color:#fff;padding:5px 7px;border-radius:4px}
-.cam-tip{position:absolute;right:8px;top:8px;font:500 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);background:var(--accent);padding:4px 6px;border-radius:3px}
+.cam-alt{position:absolute;left:8px;top:8px;font:800 14px/1 var(--display);letter-spacing:.04em;background:rgba(6,18,42,.72);color:#fff;padding:5px 8px 4px;transform:skewX(-9deg)}
+.cam-tip{position:absolute;right:8px;top:8px;font:800 12px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--accent);padding:5px 7px 4px;transform:skewX(-9deg)}
+.cam-live{position:absolute;left:8px;bottom:8px;display:inline-flex;align-items:center;gap:5px;font:500 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:rgba(6,18,42,.72);color:#fff;padding:5px 7px;border-radius:4px}
+.cam-live i{width:6px;height:6px;border-radius:50%;background:#ff3b3b}
 .cam-body{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;min-width:0}
 .cam-body div{display:flex;flex-direction:column;gap:1px;min-width:0}
-.cam-body strong{font-weight:600;font-size:14px;line-height:1.25;overflow-wrap:anywhere}
+.cam-body strong{font-weight:700;font-size:14px;line-height:1.25;overflow-wrap:anywhere}
 .cam-body small{font:400 11px/1.2 var(--mono);color:var(--muted)}
-.cam-body a{font:500 11px/1 var(--mono);text-decoration:none;color:var(--piste-blue);white-space:nowrap;padding:6px 0}
-.cam-up{display:none;padding:0 10px 10px}
-body.editing .cam-up{display:flex}
-.cam-up label{flex:1;text-align:center;justify-content:center}
-.cam-up input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.cam-body a{font:600 11px/1 var(--mono);text-decoration:none;color:var(--ice);white-space:nowrap;padding:6px 0}
 
-/* Links */
+/* ---------- LINKS / FACTS / DAYS / CHECK / CONTACTS ---------- */
 .links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (max-width:560px){.links{grid-template-columns:1fr}}
-.link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px;text-decoration:none;min-width:0;transition:border-color .15s,transform .15s}
-.link:hover{border-color:var(--piste-blue);transform:translateY(-1px)}
+.link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--paper);border:1px solid var(--line);border-radius:12px;text-decoration:none;min-width:0;transition:border-color .15s,transform .15s}
+.link:hover{border-color:var(--accent);transform:translateY(-1px)}
 .link div{display:flex;flex-direction:column;gap:2px;min-width:0}
-.link strong{font-weight:600}
+.link strong{font-weight:700}
 .link span{font-size:13px;color:var(--muted)}
-.link em{font:500 12px/1 var(--mono);font-style:normal;color:var(--piste-blue);white-space:nowrap}
-
-/* Facts / days / checklist / contacts */
-.facts{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:0}
-.fact{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;padding:13px 16px;border-top:1px solid var(--line)}
+.link em{font:600 12px/1 var(--mono);font-style:normal;color:var(--ice);white-space:nowrap}
+.facts{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:0}
+.fact{display:grid;grid-template-columns:160px minmax(0,1fr);gap:14px;padding:13px 16px;border-top:1px solid var(--line)}
 .fact:first-child{border-top:0}
-.fact dt{font:500 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
+.fact dt{font:600 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
 .fact dd{margin:0;min-width:0}
 @media (max-width:520px){.fact{grid-template-columns:1fr;gap:4px}}
-.days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-@media (max-width:560px){.days{grid-template-columns:1fr}}
-.day{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px}
-.day .d{font:900 30px/1 var(--display);text-transform:uppercase}
-.day ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px}
-.day.main{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.plan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.plan{grid-template-columns:1fr}}
+.pday{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.pday .d{font:900 40px/1 var(--display);text-transform:uppercase;transform:skewX(-9deg);transform-origin:left bottom}
+.pday ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.pday.main{background:var(--night);color:var(--night-ink);border-color:var(--night)}
+.pday.main .eyebrow{color:var(--night-muted)}
+.pday.main::after{content:"";position:absolute;right:-30px;top:16px;width:120px;height:10px;background:var(--accent);transform:rotate(-30deg)}
 .check{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 @media (max-width:520px){.check{grid-template-columns:1fr}}
-.check label{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;background:var(--paper);border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;background:var(--paper);border:1px solid var(--line);border-radius:10px;cursor:pointer}
 .check input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent);flex:none}
 .check input:checked + span{color:var(--muted);text-decoration:line-through}
 .contacts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (max-width:560px){.contacts{grid-template-columns:1fr}}
-.contact{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.contact{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.contact h3{font-size:22px;font-weight:800;text-transform:uppercase}
 .copyrow{display:flex;align-items:center;justify-content:space-between;gap:8px;font:400 14px/1.3 var(--mono);min-width:0}
 .copyrow span{user-select:all;overflow-wrap:anywhere}
-.copyrow button{font:500 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);background:var(--chip);color:var(--ink);padding:6px 8px;border-radius:5px;cursor:pointer;flex:none}
+.copyrow button{font:600 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);background:var(--chip);color:var(--ink);padding:6px 8px;border-radius:5px;cursor:pointer;flex:none}
+footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:18px}
 
-/* Editor dialog */
-dialog{border:0;padding:0;border-radius:14px;background:var(--paper);color:var(--ink);width:min(680px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
-dialog::backdrop{background:rgba(5,12,20,.55)}
+/* ---------- DIALOGS ---------- */
+dialog{border:0;padding:0;border-radius:16px;background:var(--paper);color:var(--ink);width:min(620px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
+dialog::backdrop{background:rgba(3,8,18,.62)}
 .ed{display:flex;flex-direction:column;max-height:calc(100dvh - 24px)}
 .ed-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
-.ed-body{overflow:auto;padding:16px 18px;display:flex;flex-direction:column;gap:22px}
+.ed-head h3{font-size:26px;text-transform:uppercase}
+.ed-body{overflow:auto;padding:16px 18px;display:flex;flex-direction:column;gap:20px}
 .ed-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--line);flex-wrap:wrap}
 .ed fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
 .ed legend{font:800 18px/1 var(--display);text-transform:uppercase;letter-spacing:.03em;margin-bottom:10px;padding:0}
+.ed .hint{font-size:13px;color:var(--muted)}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 @media (max-width:480px){.grid3{grid-template-columns:1fr 1fr}}
 .f{display:flex;flex-direction:column;gap:4px;min-width:0}
-.f label{font:500 11px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.f input,.f select,.f textarea{font:15px/1.3 var(--body);padding:9px 10px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
+.f label{font:600 11px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.f input,.f select,.f textarea{font:15px/1.3 var(--body);padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
 .f textarea{min-height:72px;resize:vertical}
-.rows-wrap{overflow-x:auto}
-.rows{width:100%;border-collapse:collapse;min-width:560px}
-.rows th{font:500 10px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 4px 6px}
-.rows td{padding:3px 4px}
-.rows input{font:14px/1.2 var(--mono);padding:7px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
-.rows .x{border:0;background:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 6px}
 .msg{font-size:13px;color:var(--muted)}
 .msg.err{color:var(--accent)}
-
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:8px;font-size:14px;z-index:10;max-width:calc(100vw - 32px)}
-
-footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:18px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-
-/* Standalone additions */
-[hidden]{display:none!important}
-img{max-width:100%}
-button.cam-media{cursor:zoom-in;border:0;padding:0;width:100%;text-align:left;font:inherit;color:inherit}
-.cam-media img{transition:opacity .3s}
-.cam-live{position:absolute;left:8px;bottom:8px;display:inline-flex;align-items:center;gap:5px;font:500 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--overlay);color:#fff;padding:5px 7px;border-radius:4px}
-.cam-live i{width:6px;height:6px;border-radius:50%;background:#ff4d5e}
 .lb{width:min(1100px,calc(100vw - 24px))}
 .lb-body{display:flex;flex-direction:column}
 .lb-body img{width:100%;height:auto;display:block;background:var(--chip);max-height:calc(100dvh - 160px);object-fit:contain}
 .lb-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;flex-wrap:wrap}
-.lb-foot div{display:flex;flex-direction:column;gap:2px}
+.lb-foot h3{font-size:24px;text-transform:uppercase}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:14px;z-index:10;max-width:calc(100vw - 32px)}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important}
+  .flake,.drop,.live-dot.on i,.btn.spin svg{animation:none!important}
+}
 </style>
 </head>
 <body>
-<main class="wrap loading" id="app">
+
+<header class="hero" id="top">
+  <canvas id="snowfx" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div class="hero-top"><span>Silvretta Arena · <b>Ischgl / Samnaun</b></span><span>Saison <b>2026/27</b></span></div>
+    <h1>Ischgl</h1>
+    <div class="hero-sub">
+      <span class="tag"><span>Opening 2026</span></span>
+      <span class="hero-facts">239 km Piste · 2.872 m Gipfel · 46 Anlagen</span>
+    </div>
+    <div class="clock" aria-live="off">
+      <div class="digits" id="clock"><span id="cd-d">--</span><small>T</small> <span id="cd-hms">--:--:--</span></div>
+      <div class="lbl" id="cd-note">bis zum ersten Lift<br>Do 26.11.2026</div>
+    </div>
+    <div class="ticker" id="ticker">
+      <div class="tick"><small>Gipfel jetzt</small><b id="tk-top">–</b></div>
+      <div class="tick"><small>Nullgradgrenze</small><b id="tk-zero">–</b></div>
+      <div class="tick"><small>Neuschnee 7 Tage</small><b id="tk-fc">–</b></div>
+      <div class="tick"><small>Schnee Idalp</small><b id="tk-depth">–</b></div>
+    </div>
+  </div>
+  <svg class="hero-ridges" viewBox="0 0 1440 170" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 120 L120 70 L210 98 L330 30 L420 84 L520 52 L610 92 L720 18 L820 76 L930 44 L1040 96 L1150 36 L1260 82 L1360 58 L1440 88 L1440 170 L0 170Z" fill="#2a5b98" opacity=".55"/>
+    <path d="M0 140 L90 112 L190 132 L300 84 L380 118 L480 92 L600 128 L700 74 L790 112 L900 90 L1010 126 L1120 82 L1230 120 L1330 98 L1440 124 L1440 170 L0 170Z" fill="#8fb9e2" opacity=".55"/>
+    <path d="M0 158 L140 140 L260 152 L400 128 L520 150 L660 132 L800 154 L940 136 L1080 156 L1220 138 L1340 152 L1440 142 L1440 170 L0 170Z" style="fill:var(--bg)"/>
+  </svg>
+</header>
+
+<nav class="nav" aria-label="Bereiche">
+  <div class="nav-inner" id="navlinks">
+    <a href="#schnee">Schnee</a><a href="#nullgrad">Nullgrad</a><a href="#webcams">Webcams</a><a href="#ablauf">Ablauf</a><a href="#tickets">Tickets</a><a href="#anreise">Anreise</a><a href="#packliste">Packliste</a><a href="#live">Links</a>
+  </div>
+</nav>
+
+<main class="wrap" id="app">
 
   <div class="ownerbar" id="ownerbar" hidden>
-    <p id="ownerbar-text">Schneestand, Prognose und Gruppen-Hinweis kannst du hier aktualisieren.</p>
-    <div class="btns"><button class="btn primary" type="button" id="btn-edit">Daten aktualisieren</button></div>
+    <p id="ownerbar-text">Status des Skigebiets, Lifte und die Ansage an die Gruppe pflegst du hier. Schnee und Wetter kommen automatisch.</p>
+    <button class="btn primary" type="button" id="btn-edit">Daten bearbeiten</button>
   </div>
 
-  <!-- HERO -->
-  <section class="ticket" aria-label="Countdown zum Opening-Konzert">
-    <div class="ticket-top">
-      <div class="ticket-meta"><span>Silvretta Arena · Ischgl/Samnaun</span><span>Saison 2026/27</span></div>
-      <h1>Ischgl Opening<span>Top of the Mountain · Westlife live</span></h1>
-      <div class="count">
-        <div><b id="cd-d">--</b><small>Tage</small></div>
-        <div><b id="cd-h">--</b><small>Std</small></div>
-        <div><b id="cd-m">--</b><small>Min</small></div>
-        <div><b id="cd-s">--</b><small>Sek</small></div>
+  <div class="note" id="group-note" hidden></div>
+
+  <!-- LIVE SNOW -->
+  <section class="section" id="schnee">
+    <div class="section-head">
+      <span class="eyebrow">Live aus Ischgl</span>
+      <div class="row">
+        <h2>Schneelage</h2>
+        <button class="btn" type="button" id="btn-refresh" aria-label="Schnee und Wetter jetzt aktualisieren">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+          <span>Aktualisieren</span>
+        </button>
       </div>
-      <p class="num" id="cd-note" style="font-size:14px;opacity:.95">bis Konzertbeginn am Sa, 28.11.2026 um 18:00 Uhr</p>
     </div>
-    <div class="ticket-bottom">
-      <div><small>Saisonstart</small><strong>Do 26.11.</strong><span>Erster Skitag</span></div>
-      <div><small>Konzert</small><strong>Sa 28.11.</strong><span>Einlass 16:30 · Start 18:00</span></div>
-      <div><small>Location</small><strong>Parkplatz P1</strong><span>Silvrettaparkplatz Ost</span></div>
+    <div class="live-bar">
+      <span class="live-dot" id="live-state"><i></i><span id="live-text">Lade aktuellen Stand …</span></span>
+      <span class="stamp" id="live-src"></span>
+    </div>
+    <div class="stakes-wrap">
+      <div class="panel stakes">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline">
+          <h3 style="font-size:22px;text-transform:uppercase">Schneepegel</h3>
+          <span class="stamp" id="stake-src">Messstationen</span>
+        </div>
+        <div class="stakes-row" id="stakes"></div>
+        <span class="stamp" id="stake-last"></span>
+      </div>
+      <div class="tiles">
+        <div class="wide"><small>Skigebiet</small><span class="pill" id="st-pill"><i></i><span id="st-label">–</span></span><span class="stamp" id="st-note"></span></div>
+        <div><small>Lifte offen</small><b id="st-lifts">–</b></div>
+        <div><small>Pisten offen</small><b id="st-slopes">–</b></div>
+        <div><small>Gipfel 2.872 m</small><b id="st-ttop">–</b></div>
+        <div><small>Tal 1.377 m</small><b id="st-tval">–</b></div>
+      </div>
     </div>
   </section>
 
-  <!-- SNOW STATUS -->
-  <section class="section" id="schnee">
+  <!-- FREEZING LEVEL MOUNTAIN -->
+  <section class="section" id="nullgrad">
     <div class="section-head">
-      <span class="eyebrow">Schnee &amp; Pisten</span>
-      <h2>Aktueller Stand</h2>
+      <span class="eyebrow">Prognose 7 Tage · Open-Meteo</span>
+      <h2>Nullgradgrenze</h2>
+      <p class="lead">Oberhalb der orangen Linie hat es Minusgrade, dort bleibt Schnee liegen. Fällt Niederschlag, kommt er etwa ab der blauen Linie als Schnee runter. Tag antippen zum Wechseln.</p>
     </div>
-    <div class="note" id="group-note" hidden></div>
-    <div class="status-grid" data-live>
-      <div><small>Skigebiet</small><span class="pill" id="st-pill"><i></i><span id="st-label">–</span></span><span class="stamp" id="st-note"></span></div>
-      <div><small>Schnee Berg</small><b id="st-top">–</b></div>
-      <div><small>Schnee Tal</small><b id="st-valley">–</b></div>
-      <div><small>Neuschnee 24 h</small><b id="st-new">–</b></div>
-      <div><small>Lifte offen</small><b id="st-lifts">–</b></div>
-      <div><small>Pisten offen</small><b id="st-slopes">–</b></div>
-    </div>
-    <p class="stamp" id="st-updated">Stand wird geladen …</p>
-
-    <div class="panel fl" data-live>
-      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline">
-        <h3 id="fc-title">Nullgradgrenze</h3>
-        <span class="stamp" id="fc-meta"></span>
+    <div class="panel mtn">
+      <div class="mtn-head">
+        <div class="verdict"><b id="mt-title">Lade Prognose …</b><span id="mt-text"></span></div>
+        <span class="badge" id="mt-badge" hidden></span>
       </div>
-      <p class="lead" style="font-size:14px" id="fc-comment"></p>
-      <div class="fl-legend">
-        <span><i style="border-color:var(--bar-strong);border-top-width:8px"></i>Nullgradgrenze (Spanne)</span>
-        <span><i style="border-color:var(--piste-blue)"></i>Mittelstation 2.126 m</span>
-        <span><i style="border-color:var(--accent)"></i>Greitspitz 2.872 m</span>
-      </div>
-      <div class="fl-rows" id="fl-rows"></div>
-      <div class="fl-axis"><div></div><div id="fl-axis"></div><div></div></div>
+      <svg class="mtn-svg" id="mtn" viewBox="0 0 1000 440" role="img" aria-label="Berg mit Nullgradgrenze"></svg>
+      <div class="days" id="days" role="group" aria-label="Tag wählen"></div>
+      <div class="mtn-foot"><span class="stamp" id="mt-src">Quelle: Open-Meteo</span><span class="stamp">Temperaturen = Tageshöchstwert</span></div>
     </div>
   </section>
 
   <!-- WEBCAMS -->
   <section class="section" id="webcams">
     <div class="section-head">
-      <span class="eyebrow">Webcams · 16 Kameras</span>
-      <h2>Vom Dorf bis zum Gipfel</h2>
-      <p class="lead">Sortiert nach Höhe. Idalp und Pardatschgrat zeigen am besten, wie viel Schnee auf den Hauptpisten liegt. Ischgl Dorf zeigt das Konzertgelände. Die Bilder kommen direkt von den Kameras und laden alle 5 Minuten neu. Antippen vergrößert, „Live“ öffnet den Livestream.</p>
+      <span class="eyebrow">16 Kameras · alle 5 Minuten neu</span>
+      <h2>Webcams</h2>
+      <p class="lead">Vom Dorf bis zum Gipfel, sortiert nach Höhe. Idalp und Pardatschgrat zeigen am besten, wie viel Schnee auf den Hauptpisten liegt. Antippen vergrößert, „Live“ öffnet den Livestream.</p>
     </div>
     <div class="camgrid" id="cams"></div>
-  </section>
-
-  <!-- LIVE LINKS -->
-  <section class="section" id="live">
-    <div class="section-head">
-      <span class="eyebrow">Live-Daten</span>
-      <h2>Vor der Abfahrt checken</h2>
-      <p class="lead">Offizielle Quellen und gute Prognoseseiten, immer mit aktuellem Stand.</p>
-    </div>
-    <div class="links">
-      <a class="link" href="https://www.ischgl.com/en/winter/snow-report" target="_blank" rel="noopener"><div><strong>Schneebericht</strong><span>Offiziell, Berg &amp; Tal, Neuschnee</span></div><em>ischgl.com ↗</em></a>
-      <a class="link" href="https://www.ischgl.com/en/winter/silvretta-arena/open-facilities" target="_blank" rel="noopener"><div><strong>Offene Lifte &amp; Pisten</strong><span>Live-Status aller 46 Anlagen</span></div><em>ischgl.com ↗</em></a>
-      <a class="link" href="https://www.snow-forecast.com/resorts/Ischgl/6day/top" target="_blank" rel="noopener"><div><strong>Schneeprognose Gipfel</strong><span>6 Tage, Neuschnee in cm, Wind</span></div><em>snow-forecast ↗</em></a>
-      <a class="link" href="https://www.snow-forecast.com/resorts/Ischgl/6day/mid" target="_blank" rel="noopener"><div><strong>Schneeprognose Mittelstation</strong><span>2.126 m, Nullgradgrenze</span></div><em>snow-forecast ↗</em></a>
-      <a class="link" href="https://www.ischgl.com/en/plan-your-trip/weather" target="_blank" rel="noopener"><div><strong>Wetter Ischgl</strong><span>Tal und Berg, mehrere Tage</span></div><em>ischgl.com ↗</em></a>
-      <a class="link" href="https://www.schneehoehen.de/skigebiete/schneebericht/ischgl" target="_blank" rel="noopener"><div><strong>Schneehöhen-Verlauf</strong><span>Zweite Quelle zum Gegenchecken</span></div><em>schneehoehen.de ↗</em></a>
-      <a class="link" href="https://lawinen.report" target="_blank" rel="noopener"><div><strong>Lawinenlage Tirol</strong><span>Wichtig für alles abseits der Piste</span></div><em>lawinen.report ↗</em></a>
-      <a class="link" href="https://www.google.com/maps/search/?api=1&query=Silvrettaparkplatz+Ost+Ischgl" target="_blank" rel="noopener"><div><strong>Konzertgelände P1</strong><span>Silvrettaplatz, 6561 Ischgl</span></div><em>Karte ↗</em></a>
-    </div>
   </section>
 
   <!-- PLAN -->
   <section class="section" id="ablauf">
     <div class="section-head"><span class="eyebrow">Opening-Wochenende</span><h2>Ablauf</h2></div>
-    <div class="days">
-      <div class="day"><span class="eyebrow">Donnerstag</span><span class="d">26.11.</span><ul><li>Saisonstart Silvretta Arena</li><li>Ab heute alle Kassen 08:00–17:00</li></ul></div>
-      <div class="day main"><span class="eyebrow">Samstag</span><span class="d">28.11.</span><ul><li>Skitag, Ticket = Konzerteintritt</li><li>16:30 Einlass Parkplatz P1</li><li>18:00 Westlife live</li><li>Kasse Silvrettabahn A1 bis 18:30</li></ul></div>
-      <div class="day"><span class="eyebrow">Sonntag</span><span class="d">29.11.</span><ul><li>Skitag nach dem Konzert</li><li>Wer erst Sa anreist: Konzertticket auf So datieren lassen</li></ul></div>
+    <div class="plan">
+      <div class="pday"><span class="eyebrow">Donnerstag</span><span class="d">26.11.</span><ul><li>Saisonstart Silvretta Arena</li><li>Ab heute alle Kassen 08:00–17:00</li></ul></div>
+      <div class="pday main"><span class="eyebrow">Samstag</span><span class="d">28.11.</span><ul><li>Skitag, Tagesticket = Konzerteintritt</li><li>16:30 Einlass Parkplatz P1</li><li>18:00 Top of the Mountain Concert</li><li>Kasse Silvrettabahn A1 bis 18:30</li></ul></div>
+      <div class="pday"><span class="eyebrow">Sonntag</span><span class="d">29.11.</span><ul><li>Skitag</li><li>Wer erst Sa anreist: Tagesticket auf So datieren lassen</li></ul></div>
     </div>
   </section>
 
   <!-- TICKETS -->
   <section class="section" id="tickets">
-    <div class="section-head"><span class="eyebrow">Skipass &amp; Konzert</span><h2>Tickets</h2></div>
+    <div class="section-head"><span class="eyebrow">Skipass</span><h2>Tickets</h2></div>
     <dl class="facts">
-      <div class="fact"><dt>Tagesskipass 28.11.</dt><dd><b class="num">100 €</b> Erwachsene/Senioren, <b class="num">62 €</b> Kinder unter 17. Unter 8 frei mit Elternteil. Gilt als Konzertticket.</dd></div>
-      <div class="fact"><dt>Mehrtagespass</dt><dd>Mehrtages-Skipässe gelten als Eintritt zum Konzert.</dd></div>
-      <div class="fact"><dt>Nicht verfügbar</dt><dd>Am Konzerttag kein Tagespass ohne Konzert, kein Halbtags-, Nachmittags-, Schmuggler- oder Berg-/Talticket.</dd></div>
+      <div class="fact"><dt>Tagesskipass 28.11.</dt><dd><b class="num">100 €</b> Erwachsene/Senioren, <b class="num">62 €</b> Kinder unter 17. Unter 8 frei mit Elternteil. Gilt auch als Konzertticket.</dd></div>
+      <div class="fact"><dt>Mehrtagespass</dt><dd>Mehrtages-Skipässe gelten auch als Eintritt zum Konzert.</dd></div>
+      <div class="fact"><dt>Nicht verfügbar</dt><dd>Am 28.11. kein Tagespass ohne Konzert, kein Halbtags-, Nachmittags-, Schmuggler- oder Berg-/Talticket.</dd></div>
       <div class="fact"><dt>Snow Card Tirol</dt><dd>Gilt am 28.11. nicht. Mit Vorlage gibt es den Tagespass inkl. Konzert für 62 €.</dd></div>
       <div class="fact"><dt>Gruppen ab 20</dt><dd>Vorher per Mail bei <span style="user-select:all">info@silvretta.at</span> anmelden, dann gibt es ein Ticketkontingent.</dd></div>
-      <div class="fact"><dt>Kassen</dt><dd>Ab 26.11. alle Kassen 08:00–17:00. Am 28.11. hat die Kasse Silvrettabahn A1 bis 18:30 offen. Bei Überfüllung kann der Verkauf begrenzt werden.</dd></div>
+      <div class="fact"><dt>Kassen</dt><dd>Ab 26.11. alle Kassen 08:00–17:00. Am 28.11. hat die Kasse Silvrettabahn A1 bis 18:30 offen.</dd></div>
     </dl>
-    <div class="links" style="grid-template-columns:1fr">
-      <a class="link" href="https://tickets.ischgl.com/en/winter/store#/en/buy?skugroup_id=4214&product_id=23974" target="_blank" rel="noopener"><div><strong>Konzert inkl. Skipass kaufen</strong><span>Offizieller Ticketshop der Silvrettaseilbahn</span></div><em>tickets.ischgl.com ↗</em></a>
-      <a class="link" href="https://www.ischgl.com/de/veranstaltungen-erlebnisse/topevents/westlife_event_42210307" target="_blank" rel="noopener"><div><strong>Alle Infos zum Konzert</strong><span>Eventseite des Veranstalters</span></div><em>ischgl.com ↗</em></a>
+    <div class="links">
+      <a class="link" href="https://tickets.ischgl.com/en/winter/store#/en/buy?skugroup_id=4214&product_id=23974" target="_blank" rel="noopener"><div><strong>Skipass 28.11. kaufen</strong><span>Offizieller Ticketshop der Silvrettaseilbahn</span></div><em>tickets ↗</em></a>
+      <a class="link" href="https://www.ischgl.com/de/veranstaltungen-erlebnisse/topevents/westlife_event_42210307" target="_blank" rel="noopener"><div><strong>Infos zum Opening-Wochenende</strong><span>Eventseite des Veranstalters</span></div><em>ischgl.com ↗</em></a>
     </div>
   </section>
 
@@ -333,7 +401,7 @@ button.cam-media{cursor:zoom-in;border:0;padding:0;width:100%;text-align:left;fo
     <dl class="facts">
       <div class="fact"><dt>Bahn</dt><dd>Nächster Bahnhof ist Landeck-Zams.</dd></div>
       <div class="fact"><dt>Bus</dt><dd>Linie 260 ab Landeck-Zams bis zur Talstation Silvrettabahn. Mit Skiausrüstung kostenlos.</dd></div>
-      <div class="fact"><dt>Konzert-Adresse</dt><dd>Silvrettaparkplatz Ost (P1), Silvrettaplatz, 6561 Ischgl</dd></div>
+      <div class="fact"><dt>Talstation</dt><dd>Silvrettabahn, Silvrettaplatz, 6561 Ischgl</dd></div>
       <div class="fact"><dt>Neu diesen Winter</dt><dd>Höllkar-Bahn als weitere neue 8er-Sesselbahn der D-Line.</dd></div>
     </dl>
   </section>
@@ -344,11 +412,22 @@ button.cam-media{cursor:zoom-in;border:0;padding:0;width:100%;text-align:left;fo
     <div class="check" id="check"></div>
   </section>
 
+  <!-- LIVE LINKS -->
+  <section class="section" id="live">
+    <div class="section-head"><span class="eyebrow">Zum Gegenchecken</span><h2>Links</h2></div>
+    <div class="links">
+      <a class="link" href="https://www.ischgl.com/de/winter/schneebericht" target="_blank" rel="noopener"><div><strong>Schneebericht</strong><span>Offiziell, Messstationen</span></div><em>ischgl.com ↗</em></a>
+      <a class="link" href="https://www.ischgl.com/de/winter/silvretta-arena/geoeffnete-anlagen" target="_blank" rel="noopener"><div><strong>Offene Lifte &amp; Pisten</strong><span>Live-Status aller Anlagen</span></div><em>ischgl.com ↗</em></a>
+      <a class="link" href="https://www.snow-forecast.com/resorts/Ischgl/6day/top" target="_blank" rel="noopener"><div><strong>Schneeprognose Gipfel</strong><span>6 Tage, Neuschnee, Wind</span></div><em>snow-forecast ↗</em></a>
+      <a class="link" href="https://lawinen.report" target="_blank" rel="noopener"><div><strong>Lawinenlage Tirol</strong><span>Wichtig für alles abseits der Piste</span></div><em>lawinen.report ↗</em></a>
+    </div>
+  </section>
+
   <!-- CONTACTS -->
   <section class="section" id="kontakt">
     <div class="section-head"><span class="eyebrow">Falls was ist</span><h2>Kontakte</h2></div>
     <div class="contacts">
-      <div class="contact"><h3>Silvrettaseilbahn AG</h3><span class="stamp">Lifte, Skipässe, Konzerttickets</span>
+      <div class="contact"><h3>Silvrettaseilbahn AG</h3><span class="stamp">Lifte, Skipässe</span>
         <div class="copyrow"><span>+43 5444 606</span><button type="button" data-copy="+43 5444 606">Kopieren</button></div>
         <div class="copyrow"><span>office@silvretta.at</span><button type="button" data-copy="office@silvretta.at">Kopieren</button></div>
       </div>
@@ -360,48 +439,41 @@ button.cam-media{cursor:zoom-in;border:0;padding:0;width:100%;text-align:left;fo
   </section>
 
   <footer>
-    <span>Event- und Ticketangaben laut Veranstalter (ischgl.com, Stand Oktober 2026), ohne Gewähr.</span>
-    <span>Schneestand und Prognose werden von Hand gepflegt, maßgeblich sind die Live-Quellen. Webcam-Bilder: ischgl.com.</span>
+    <span>Schneehöhen: Schneebericht ischgl.com. Wetter, Nullgradgrenze und Prognose: Open-Meteo.com (CC BY 4.0). Webcam-Bilder: ischgl.com.</span>
+    <span>Event- und Ticketangaben laut Veranstalter, Stand Oktober 2026, ohne Gewähr.</span>
   </footer>
 </main>
 
 <!-- EDITOR -->
 <dialog id="editor" aria-labelledby="ed-title">
   <form class="ed" id="ed-form" method="dialog" autocomplete="off">
-    <div class="ed-head"><h3 id="ed-title">Daten aktualisieren</h3><button class="btn small" type="button" id="ed-close">Schließen</button></div>
+    <div class="ed-head"><h3 id="ed-title">Daten bearbeiten</h3><button class="btn small" type="button" id="ed-close">Schließen</button></div>
     <div class="ed-body">
       <div class="f" id="e-token-wrap"><label for="e-token">Passwort (EDIT_TOKEN)</label><input id="e-token" type="password" autocomplete="current-password"></div>
       <fieldset>
-        <legend>Schnee &amp; Pisten</legend>
+        <legend>Skigebiet</legend>
         <div class="grid2">
-          <div class="f"><label for="e-status">Skigebiet</label>
+          <div class="f"><label for="e-status">Status</label>
             <select id="e-status"><option value="closed">Geschlossen</option><option value="partial">Teilweise offen</option><option value="open">Geöffnet</option></select></div>
           <div class="f"><label for="e-statusNote">Zusatz</label><input id="e-statusNote" type="text" placeholder="z. B. öffnet 26.11.2026"></div>
         </div>
         <div class="grid3">
-          <div class="f"><label for="e-snowTop">Schnee Berg (cm)</label><input id="e-snowTop" type="number" inputmode="numeric" min="0"></div>
-          <div class="f"><label for="e-snowValley">Schnee Tal (cm)</label><input id="e-snowValley" type="number" inputmode="numeric" min="0"></div>
-          <div class="f"><label for="e-newSnow">Neuschnee 24 h (cm)</label><input id="e-newSnow" type="number" inputmode="numeric" min="0"></div>
           <div class="f"><label for="e-liftsOpen">Lifte offen</label><input id="e-liftsOpen" type="number" inputmode="numeric" min="0"></div>
           <div class="f"><label for="e-liftsTotal">Lifte gesamt</label><input id="e-liftsTotal" type="number" inputmode="numeric" min="0"></div>
           <div class="f"><label for="e-slopesOpen">Pisten-km offen</label><input id="e-slopesOpen" type="number" inputmode="numeric" min="0"></div>
         </div>
-        <div class="f"><label for="e-groupNote">Hinweis an die Gruppe (optional)</label><textarea id="e-groupNote" placeholder="z. B. Treffpunkt Samstag 9 Uhr an der Silvrettabahn"></textarea></div>
       </fieldset>
       <fieldset>
-        <legend>Prognose</legend>
+        <legend>Ansage an die Gruppe</legend>
+        <div class="f"><label for="e-groupNote">Text (leer = ausblenden)</label><textarea id="e-groupNote" placeholder="z. B. Treffpunkt Samstag 9 Uhr an der Silvrettabahn"></textarea></div>
+      </fieldset>
+      <fieldset>
+        <legend>Schnee von Hand</legend>
+        <p class="hint">Nur nötig, falls der Schneebericht von ischgl.com nicht automatisch geladen werden kann.</p>
         <div class="grid2">
-          <div class="f"><label for="e-fcSource">Quelle</label><input id="e-fcSource" type="text"></div>
-          <div class="f"><label for="e-fcIssued">Prognose vom</label><input id="e-fcIssued" type="text" placeholder="TT.MM.JJJJ, hh:mm"></div>
+          <div class="f"><label for="e-snowTop">Schnee Berg (cm)</label><input id="e-snowTop" type="number" inputmode="numeric" min="0"></div>
+          <div class="f"><label for="e-snowValley">Schnee Tal (cm)</label><input id="e-snowValley" type="number" inputmode="numeric" min="0"></div>
         </div>
-        <div class="f"><label for="e-fcComment">Kurzfazit</label><textarea id="e-fcComment"></textarea></div>
-        <div class="rows-wrap">
-          <table class="rows">
-            <thead><tr><th>Tag</th><th>Datum</th><th>Nullgrad von (m)</th><th>bis (m)</th><th>Neuschnee cm</th><th>Niederschl. mm</th><th>Min °C</th><th>Max °C</th><th></th></tr></thead>
-            <tbody id="e-rows"></tbody>
-          </table>
-        </div>
-        <div><button class="btn small" type="button" id="e-addrow">+ Tag hinzufügen</button></div>
       </fieldset>
     </div>
     <div class="ed-foot">
@@ -416,7 +488,7 @@ button.cam-media{cursor:zoom-in;border:0;padding:0;width:100%;text-align:left;fo
     <img id="lb-img" alt="">
     <div class="lb-foot">
       <div><h3 id="lb-title">Webcam</h3><span class="stamp" id="lb-meta"></span></div>
-      <div style="flex-direction:row;gap:8px">
+      <div style="display:flex;gap:8px">
         <a class="btn" id="lb-live" href="#" target="_blank" rel="noopener">Livestream ↗</a>
         <button class="btn primary" type="button" id="lb-close">Schließen</button>
       </div>
