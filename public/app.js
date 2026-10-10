@@ -51,7 +51,7 @@
   heroCam.addEventListener('load',function(){heroCam.hidden=false;});
   heroCam.addEventListener('error',function(){if(!heroCam.dataset.ok)heroCam.hidden=true;});
   heroCam.addEventListener('load',function(){heroCam.dataset.ok='1';});
-  function loadHeroCam(){var pre=new Image();pre.onload=function(){heroCam.src=pre.src;};pre.src=camSrc('100178345');}
+  function loadHeroCam(){var pre=new Image();pre.referrerPolicy='no-referrer';pre.onload=function(){heroCam.src=pre.src;};pre.src=camSrc('100178345');}
   loadHeroCam();
 
   /* =====================================================================
@@ -582,7 +582,7 @@
       var L=r[0],data=r[1];NV.data=data;
       NV.g=buildGraph(data.ways);
       NV.map=L.map('navi-map',{zoomControl:true,attributionControl:true,tap:true});
-      L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{subdomains:'abc',maxZoom:17,attribution:'Karte © <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA) · Daten © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(NV.map);
+      L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{subdomains:'abc',maxZoom:17,referrerPolicy:'strict-origin-when-cross-origin',attribution:'Karte © <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA) · Daten © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(NV.map);
       var b=L.latLngBounds([]);data.ways.forEach(function(w){b.extend(w.g[0]);b.extend(w.g[w.g.length-1]);});
       NV.map.fitBounds(b.pad(.05));
       drawNetwork(L);fillPlaces();
@@ -665,7 +665,7 @@
     loadLeaflet().then(function(L){
       RD.map=L.map('radar-map',{zoomControl:true,minZoom:4,maxZoom:9}).setView([LAT,LON],6);
       /* freie OSM-Kacheln, per CSS-Filter dunkel eingefärbt (CARTO verlangt inzwischen einen Schlüssel) */
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,className:'bm-dark',attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(RD.map);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,className:'bm-dark',referrerPolicy:'strict-origin-when-cross-origin',attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(RD.map);
       L.marker([LAT,LON],{icon:L.divIcon({className:'',html:'<div class="pin b"></div>',iconSize:[22,22],iconAnchor:[11,11]})}).addTo(RD.map).bindTooltip('Ischgl',{permanent:true,direction:'right',offset:[12,0]});
       return loadRadarFrames();
     }).catch(function(e){RD.started=false;mapMsg('radar-msg','<span>Radar nicht geladen</span><small>'+esc(e.message)+'</small>');});
@@ -722,7 +722,7 @@
   function camTile(c){
     var el=document.createElement('article');el.className='cam'+(c.feat?' feat':'');
     el.innerHTML='<button type="button" data-cam="'+c.id+'" aria-label="'+esc(c.n)+' vergrößern">'+
-      '<span class="cam-empty">'+fmtInt(c.a)+' m</span><img alt="Webcam '+esc(c.n)+'" decoding="async" hidden>'+
+      '<span class="cam-empty">'+fmtInt(c.a)+' m</span><img alt="Webcam '+esc(c.n)+'" decoding="async" referrerpolicy="no-referrer" hidden>'+
       '<div class="cam-top">'+(c.feat?'<em>Hauptpiste</em>':'')+'<time hidden></time></div>'+
       '<div class="cam-cap"><b>'+esc(c.n)+'</b><span>'+fmtInt(c.a)+' m</span></div></button>'+
       '<a class="live" href="'+CAM_PAGE+c.u+'" target="_blank" rel="noopener">Live ↗</a>';
@@ -751,7 +751,7 @@
     });
   }
   /* Neu laden nur für Cams, die gerade angezeigt werden */
-  function refreshCams(){camBust++;CAMS.forEach(function(c){if(!c.img||!c.el)return;var pre=new Image();pre.onload=function(){if(c.img)c.img.src=pre.src;};pre.src=camSrc(c.id);});}
+  function refreshCams(){camBust++;CAMS.forEach(function(c){if(!c.img||!c.el)return;var pre=new Image();pre.referrerPolicy='no-referrer';pre.onload=function(){if(c.img)c.img.src=pre.src;};pre.src=camSrc(c.id);});}
   setInterval(function(){if(!document.hidden){refreshCams();loadHeroCam();}},CAM_MS);
   var lb=$('lightbox');
   function openLightbox(c){
