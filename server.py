@@ -9,6 +9,7 @@ Umgebungsvariablen:
   PORT        Port (Standard 8080)
   DATA_FILE   Pfad zur data.json (Standard ./data/data.json)
 """
+import gzip
 import hmac
 import html as htmllib
 import json
@@ -18,6 +19,7 @@ import shutil
 import tempfile
 import threading
 import time
+import urllib.parse
 import urllib.request
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -107,6 +109,182 @@ def get_snow(force=False):
         raise RuntimeError(msg)
 
 
+# --- Pisten & Lifte aus OpenStreetMap (für Pistenplan und Ski-Navi) ------
+PISTE_BBOX = os.environ.get("PISTE_BBOX", "46.895,10.225,46.995,10.43")  # S,W,N,O
+OVERPASS_URLS = [u for u in os.environ.get(
+    "OVERPASS_URLS",
+    "https://overpass-api.de/api/interpreter,https://overpass.kumi.systems/api/interpreter",
+).split(",") if u]
+ELEVATION_URL = os.environ.get("ELEVATION_URL", "https://api.open-meteo.com/v1/elevation")
+PISTE_TTL = 7 * 86400
+PISTE_ERR_TTL = 10 * 60
+LIFT_TYPES = {"cable_car", "gondola", "mixed_lift", "chair_lift", "drag_lift",
+              "t-bar", "j-bar", "platter", "rope_tow", "magic_carpet"}
+_piste_lock = threading.Lock()
+_piste_state = {"err": None, "err_t": 0.0}
+
+
+def piste_file():
+    return os.path.join(os.path.dirname(DATA_FILE), "pistes.json")
+
+
+def _http_json(url, data=None, timeout=120):
+    req = urllib.request.Request(url, data=data, headers={
+        "User-Agent": "IschglOpening/1.0 (private trip page)",
+        "Accept": "application/json",
+    })
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read(60_000_000).decode("utf-8"))
+
+
+def _fetch_overpass():
+    q = (
+        "[out:json][timeout:120];("
+        'way["piste:type"="downhill"](%(b)s);'
+        'way["aerialway"](%(b)s);'
+        'relation["piste:type"="downhill"](%(b)s);'
+        ");out geom;" % {"b": PISTE_BBOX}
+    )
+    body = urllib.parse.urlencode({"data": q}).encode()
+    last = None
+    for url in OVERPASS_URLS:
+        try:
+            return _http_json(url, data=body, timeout=150)
+        except Exception as e:
+            last = e
+            print("Overpass %s: %s" % (url, e), flush=True)
+    raise RuntimeError("OpenStreetMap-Daten nicht abrufbar (%s)" % last)
+
+
+def _elevations(points):
+    """Höhe für [(lat, lon), …] über Open-Meteo, in Paketen zu 100."""
+    out = {}
+    pts = list(points)
+    for i in range(0, len(pts), 100):
+        chunk = pts[i:i + 100]
+        url = "%s?latitude=%s&longitude=%s" % (
+            ELEVATION_URL,
+            ",".join("%.5f" % p[0] for p in chunk),
+            ",".join("%.5f" % p[1] for p in chunk),
+        )
+        try:
+            res = _http_json(url, timeout=30).get("elevation") or []
+        except Exception as e:
+            print("Höhendaten nicht abrufbar:", e, flush=True)
+            return out
+        for p, e in zip(chunk, res):
+            if isinstance(e, (int, float)):
+                out[p] = e
+        time.sleep(0.2)
+    return out
+
+
+def _num(v):
+    try:
+        return float(str(v).replace(",", ".").split()[0])
+    except Exception:
+        return None
+
+
+def build_pistes(raw):
+    """Rohdaten von Overpass → kompaktes Format für die Karte."""
+    rel_info = {}
+    for el in raw.get("elements", []):
+        if el.get("type") != "relation":
+            continue
+        t = el.get("tags", {})
+        info = {
+            "n": t.get("piste:name") or t.get("name"),
+            "r": t.get("piste:ref") or t.get("ref"),
+            "d": t.get("piste:difficulty"),
+        }
+        for m in el.get("members", []):
+            if m.get("type") == "way":
+                cur = rel_info.setdefault(m["ref"], {})
+                for k, v in info.items():
+                    if v and not cur.get(k):
+                        cur[k] = v
+
+    ways = []
+    for el in raw.get("elements", []):
+        if el.get("type") != "way" or not el.get("geometry"):
+            continue
+        t = el.get("tags", {})
+        geom = [(round(p["lat"], 6), round(p["lon"], 6)) for p in el["geometry"] if p]
+        nodes = el.get("nodes") or []
+        if len(geom) < 2:
+            continue
+        if any(t.get(k) for k in ("disused", "abandoned", "razed")):
+            continue
+        if t.get("aerialway") in LIFT_TYPES:
+            dur = _num(t.get("aerialway:duration"))
+            ways.append({"i": el["id"], "k": "l", "t": t["aerialway"],
+                         "n": t.get("name"), "r": t.get("ref"),
+                         "dur": dur, "g": geom, "nd": nodes})
+        elif t.get("piste:type") == "downhill":
+            if t.get("area") == "yes" or (geom[0] == geom[-1] and len(geom) > 3):
+                continue
+            ri = rel_info.get(el["id"], {})
+            ways.append({"i": el["id"], "k": "p",
+                         "d": t.get("piste:difficulty") or ri.get("d"),
+                         "n": t.get("piste:name") or t.get("name") or ri.get("n"),
+                         "r": t.get("piste:ref") or t.get("ref") or ri.get("r"),
+                         "gr": t.get("piste:grooming"),
+                         "g": geom, "nd": nodes})
+    if not ways:
+        raise RuntimeError("Keine Pisten oder Lifte im Gebiet gefunden")
+    ends = set()
+    for w in ways:
+        ends.add(w["g"][0])
+        ends.add(w["g"][-1])
+    ele = _elevations(sorted(ends))
+    for w in ways:
+        w["e0"] = ele.get(w["g"][0])
+        w["e1"] = ele.get(w["g"][-1])
+        w["g"] = [[p[0], p[1]] for p in w["g"]]
+    return {"ok": True, "fetchedAt": int(time.time()), "bbox": PISTE_BBOX,
+            "elevation": bool(ele), "ways": ways,
+            "attribution": "© OpenStreetMap-Mitwirkende (ODbL)"}
+
+
+def get_pistes(force=False):
+    path = piste_file()
+    cached = None
+    if os.path.exists(path):
+        try:
+            with open(path, encoding="utf-8") as f:
+                cached = json.load(f)
+        except Exception:
+            cached = None
+    fresh = cached and time.time() - cached.get("fetchedAt", 0) < PISTE_TTL
+    if fresh and not force:
+        return cached
+    now = time.time()
+    if _piste_state["err"] and now - _piste_state["err_t"] < PISTE_ERR_TTL:
+        if cached:
+            return dict(cached, stale=True)
+        raise RuntimeError(_piste_state["err"])
+    with _piste_lock:  # nur ein Abruf gleichzeitig
+        if os.path.exists(path) and cached is None:
+            with open(path, encoding="utf-8") as f:
+                cached = json.load(f)
+        try:
+            data = build_pistes(_fetch_overpass())
+            fd, tmp = tempfile.mkstemp(dir=os.path.dirname(path), suffix=".tmp")
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                json.dump(data, f, separators=(",", ":"))
+            os.replace(tmp, path)
+            _piste_state["err"] = None
+            return data
+        except Exception as e:
+            msg = "%s: %s" % (type(e).__name__, e)
+            print("Pistendaten:", msg, flush=True)
+            _piste_state.update(err=msg, err_t=time.time())
+            if cached:
+                return dict(cached, stale=True)
+            raise RuntimeError(msg)
+
+
 def ensure_data():
     os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
     if not os.path.exists(DATA_FILE):
@@ -128,9 +306,15 @@ class Handler(SimpleHTTPRequestHandler):
         super().end_headers()
 
     def _json(self, code, obj):
-        body = json.dumps(obj, ensure_ascii=False).encode("utf-8")
+        body = json.dumps(obj, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+        gz = len(body) > 20000 and "gzip" in self.headers.get("Accept-Encoding", "")
+        if gz:
+            body = gzip.compress(body, 6)
         self.send_response(code)
         self.send_header("Content-Type", "application/json; charset=utf-8")
+        if gz:
+            self.send_header("Content-Encoding", "gzip")
+            self.send_header("Vary", "Accept-Encoding")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
@@ -147,7 +331,13 @@ class Handler(SimpleHTTPRequestHandler):
             self.wfile.write(body)
             return
         if p == "/api/config":
-            self._json(200, {"editable": bool(TOKEN), "snow": True})
+            self._json(200, {"editable": bool(TOKEN), "snow": True, "pistes": True})
+            return
+        if p == "/api/pistes":
+            try:
+                self._json(200, get_pistes())
+            except Exception as e:
+                self._json(502, {"ok": False, "error": str(e)})
             return
         if p == "/api/snow":
             force = "force=1" in (self.path.split("?", 1)[1] if "?" in self.path else "")
@@ -195,6 +385,13 @@ class Handler(SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     ensure_data()
+    if os.environ.get("PISTES_PREFETCH", "1") == "1":
+        def _prefetch():
+            try:
+                get_pistes()
+            except Exception as e:
+                print("Pistendaten beim Start nicht geladen:", e, flush=True)
+        threading.Thread(target=_prefetch, daemon=True).start()
     httpd = ThreadingHTTPServer(("0.0.0.0", PORT), partial(Handler, directory=PUBLIC))
     print(f"Ischgl Opening läuft auf http://0.0.0.0:{PORT}  (Bearbeiten {'an' if TOKEN else 'aus'})", flush=True)
     httpd.serve_forever()

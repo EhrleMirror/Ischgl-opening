@@ -5,294 +5,351 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Ischgl Opening 2026</title>
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#06122a">
+<meta name="theme-color" content="#08060f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,700;1,800;1,900&family=Barlow:wght@400;500;600;700&display=swap">
 <style>
-/* Ski-race graphics: night-sky hero with snowfall and ridgelines, slanted race-bib type,
-   signal-orange as the one loud colour, everything else glacier blue and snow. */
+/* Après-Ski-Poster: Live-Cam als Hintergrund, LED-Laufschrift, Neon auf Nachtschwarz.
+   Bewusst nur ein (dunkles) Erscheinungsbild. */
 :root{
-  --bg:#edf3f9;            /* snow haze */
-  --paper:#ffffff;
-  --ink:#08162b;
-  --muted:#4f6379;
-  --line:#d3dfea;
-  --chip:#e3ecf5;
-  --accent:#ff5a1f;        /* piste marker orange */
-  --accent-ink:#ffffff;
-  --ice:#0c8fd6;           /* glacier blue */
-  --ok:#14915a; --warn:#c77700; --off:#7d8ea1;
-  /* hero + mountain (night sky, fixed look) */
-  --night:#06122a; --night-2:#0c2650; --night-ink:#eef6ff; --night-muted:#9db4d2;
-  --sky-top:#cfe6f7; --sky-bot:#f4f9fd;
-  --ridge-back:#b9cde0; --rock:#7f8f86; --rock-2:#66756d; --snow:#ffffff; --snow-shade:#dfeaf4;
-  --zero:#ff5a1f; --snowline:#0c8fd6;
-  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
-  --body:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+  --bg:#08060f; --s1:#120d22; --s2:#1c1534; --s3:#271d47;
+  --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.18);
+  --snow:#f6f7ff; --mute:#a8a1c9; --dim:#6f6893;
+  --pink:#ff2e93; --pink-2:#ff6fb6; --cyan:#29e6ff; --lime:#c8ff3d; --amber:#ffb627;
+  --sky-top:#0b0820; --sky-bot:#2b1857; --ridge-back:#2a2152; --rock:#3a3157; --rock-2:#2c2546; --snow-shade:#c9cdf0;
+  --zero:#ff2e93; --snowline:#29e6ff;
+  --p-easy:#2f7dff; --p-int:#ff2b3d; --p-adv:#111111; --p-route:#ff9f1a;
+  --display:"Dela Gothic One","Arial Black",Impact,sans-serif;
+  --cond:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --tabbar:64px;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#050e1f;--paper:#0c1c34;--ink:#e9f2fc;--muted:#93a9c4;--line:#1b3253;--chip:#13284a;
-  --accent:#ff6a33;--accent-ink:#1a0600;--ice:#4cc2ff;--ok:#3fd18b;--warn:#f2aa3c;--off:#7f93ab;
-  --sky-top:#071733;--sky-bot:#123461;--ridge-back:#1b3760;--rock:#3a4d5e;--rock-2:#2c3d4d;--snow:#eef6ff;--snow-shade:#c9d9ea;
-  --zero:#ff6a33;--snowline:#4cc2ff;color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#050e1f;--paper:#0c1c34;--ink:#e9f2fc;--muted:#93a9c4;--line:#1b3253;--chip:#13284a;
-  --accent:#ff6a33;--accent-ink:#1a0600;--ice:#4cc2ff;--ok:#3fd18b;--warn:#f2aa3c;--off:#7f93ab;
-  --sky-top:#071733;--sky-bot:#123461;--ridge-back:#1b3760;--rock:#3a4d5e;--rock-2:#2c3d4d;--snow:#eef6ff;--snow-shade:#c9d9ea;
-  --zero:#ff6a33;--snowline:#4cc2ff;color-scheme:dark}
-
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:70px;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--snow);font:17px/1.5 var(--body);-webkit-font-smoothing:antialiased}
 [hidden]{display:none!important}
 img{max-width:100%}
 a{color:inherit}
 p{margin:0}
-h1,h2,h3{font-family:var(--display);margin:0;line-height:.95;text-wrap:balance}
+h1,h2,h3{margin:0;font-weight:400;line-height:.9}
 button{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--ice);outline-offset:2px;border-radius:4px}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
 .num{font-variant-numeric:tabular-nums}
-.stamp{font:400 12px/1.4 var(--mono);color:var(--muted)}
-.eyebrow{font:600 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}
-.slant{display:inline-block;transform:skewX(-9deg)}
+.small{font-size:13px;color:var(--mute)}
 
-/* ---------- HERO ---------- */
-.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--night) 0%,var(--night-2) 78%,#174a86 100%);color:var(--night-ink);padding-top:env(safe-area-inset-top,0px)}
-.hero canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.hero-ridges{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:auto;display:block}
-.hero-inner{position:relative;max-width:980px;margin:0 auto;padding:28px 16px 70px;display:flex;flex-direction:column;gap:18px}
-.hero-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--night-muted)}
-.hero-top b{color:var(--night-ink);font-weight:600}
-.hero h1{font-size:clamp(78px,22vw,190px);font-weight:900;letter-spacing:-.01em;text-transform:uppercase;line-height:.82;transform:skewX(-9deg);transform-origin:left bottom;
-  background:linear-gradient(180deg,#ffffff 0%,#dff1ff 55%,#9fd3ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 24px rgba(0,0,0,.35))}
-.hero-sub{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.hero-sub .tag{font:900 clamp(26px,6.5vw,44px)/1 var(--display);text-transform:uppercase;letter-spacing:.02em;background:var(--accent);color:#fff;padding:6px 14px 4px;transform:skewX(-9deg)}
-.hero-sub .tag span{display:inline-block;transform:skewX(9deg)}
-.hero-sub .hero-facts{font:500 13px/1.3 var(--mono);color:var(--night-muted);letter-spacing:.04em}
-.clock{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
-.clock .digits{font:600 clamp(30px,8vw,52px)/1 var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:8px 12px;border-radius:8px;backdrop-filter:blur(4px)}
-.clock .digits small{font-size:.42em;color:var(--night-muted);margin:0 2px 0 1px;letter-spacing:.06em}
-.clock .lbl{font:600 12px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--night-muted);padding-bottom:6px}
-.ticker{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:760px}
-@media (max-width:620px){.ticker{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.tick{background:rgba(6,18,42,.55);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0;backdrop-filter:blur(6px)}
-.tick small{font:600 10.5px/1.1 var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--night-muted)}
-.tick b{font:800 26px/1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tick b em{font-style:normal;font-size:.6em;color:var(--night-muted);margin-left:2px}
-.tick.hot{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+/* ================= HERO ================= */
+.hero{position:relative;min-height:min(82vh,860px);display:flex;align-items:flex-end;overflow:hidden;isolation:isolate;padding-top:env(safe-area-inset-top,0px);
+  background:radial-gradient(120% 80% at 70% 0%,#3a1a6b 0%,#160d33 45%,var(--bg) 100%)}
+.hero-cam{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;filter:saturate(1.25) contrast(1.08);transform:scale(1.04);animation:drift 30s ease-in-out infinite alternate}
+@keyframes drift{to{transform:scale(1.12) translate(-1.5%,-1%)}}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(8,6,15,.35) 0%,rgba(8,6,15,0) 30%,rgba(8,6,15,.55) 62%,var(--bg) 100%),
+             linear-gradient(115deg,rgba(255,46,147,.45) 0%,rgba(255,46,147,0) 45%,rgba(41,230,255,.30) 100%);mix-blend-mode:normal}
+.hero-in{width:100%;max-width:1180px;margin:0 auto;padding:22px 18px 34px;display:flex;flex-direction:column;gap:14px}
+.hero-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:auto}
+.sticker{display:inline-flex;align-items:center;gap:8px;font:800 italic 15px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;padding:8px 12px 7px;background:var(--snow);color:var(--bg);transform:rotate(-2deg);box-shadow:4px 4px 0 var(--pink)}
+.sticker.pink{background:var(--pink);color:#fff;box-shadow:4px 4px 0 var(--bg)}
+.sticker.cyan{background:var(--cyan);color:var(--bg);box-shadow:4px 4px 0 var(--pink)}
+.sticker i{width:9px;height:9px;border-radius:50%;background:var(--pink);animation:blink 1.2s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero h1{font:400 clamp(84px,25vw,300px)/.8 var(--display);letter-spacing:-.04em;text-transform:uppercase;color:var(--snow);
+  text-shadow:0 0 40px rgba(255,46,147,.55),0 6px 0 rgba(0,0,0,.25);margin-left:-.04em}
+.hero-open{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.hero-open .o{font:400 clamp(36px,9vw,104px)/.9 var(--display);text-transform:uppercase;color:transparent;-webkit-text-stroke:2px var(--snow);letter-spacing:-.01em}
+.hero-open .d{font:900 italic clamp(40px,10vw,112px)/.85 var(--cond);color:var(--cyan);text-shadow:0 0 28px rgba(41,230,255,.6)}
+.count{display:flex;gap:clamp(12px,3vw,28px);align-items:flex-end;flex-wrap:wrap;margin-top:6px}
+.count div{display:flex;flex-direction:column}
+.count b{font:900 italic clamp(44px,11vw,92px)/.85 var(--cond);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.count small{font:700 italic 14px/1.2 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--pink-2)}
+.count .sep{font:900 italic clamp(44px,11vw,92px)/.85 var(--cond);color:var(--pink);align-self:flex-start}
+.hero-note{font:700 italic 18px/1.2 var(--cond);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
 
-/* ---------- STICKY NAV ---------- */
-.nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
-.nav-inner{max-width:980px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
-.nav-inner::-webkit-scrollbar{display:none}
-.nav a{flex:none;text-decoration:none;font:700 13px/1 var(--body);text-transform:uppercase;letter-spacing:.06em;padding:14px 10px;color:var(--muted);border-bottom:3px solid transparent}
-.nav a:hover,.nav a.on{color:var(--ink);border-bottom-color:var(--accent)}
+/* ================= MARQUEE ================= */
+.marquee-wrap{overflow:hidden;margin:-18px 0 6px;padding:8px 0;position:relative;z-index:2}
+.marquee{background:var(--pink);color:#12001f;overflow:hidden;white-space:nowrap;border-block:3px solid var(--bg);transform:rotate(-1.2deg) scale(1.03)}
+.marquee-track{display:inline-flex;gap:0;animation:roll 38s linear infinite;padding:10px 0 8px}
+.marquee-track span{font:900 italic 24px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase;padding:0 18px;display:inline-flex;align-items:center;gap:18px}
+.marquee-track span::after{content:"✱";color:#fff}
+@keyframes roll{to{transform:translateX(-50%)}}
 
-/* ---------- LAYOUT ---------- */
-.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:28px 56px;display:flex;flex-direction:column;gap:56px}
-.section{display:flex;flex-direction:column;gap:18px}
-.section-head{display:flex;flex-direction:column;gap:10px}
-.section-head h2{font-size:clamp(36px,8vw,58px);font-weight:900;text-transform:uppercase;transform:skewX(-9deg);transform-origin:left bottom;width:max-content;max-width:100%}
-.section-head h2::after{content:"";display:block;height:6px;width:64px;background:var(--accent);margin-top:8px}
-.section-head .row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
-.lead{color:var(--muted);max-width:64ch}
-.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px}
+/* ================= NAV / TABBAR ================= */
+.tabbar{position:sticky;top:0;z-index:20;background:rgba(8,6,15,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.tabbar-in{max-width:1180px;margin:0 auto;display:flex;justify-content:center;gap:4px;padding:0 10px}
+.tabbar a{flex:0 1 auto;display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--mute);font:800 italic 17px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;padding:16px 14px;border-bottom:3px solid transparent}
+.tabbar a svg{width:20px;height:20px;flex:none}
+.tabbar a.on,.tabbar a:hover{color:var(--snow);border-bottom-color:var(--pink)}
+@media (max-width:820px){
+  .tabbar{position:fixed;top:auto;bottom:0;left:0;right:0;border-bottom:0;border-top:1px solid var(--line);padding-top:0;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .tabbar-in{justify-content:space-around;padding:0}
+  .tabbar a{flex:1;flex-direction:column;gap:4px;font-size:12px;padding:9px 2px 8px;border-bottom:0;border-top:3px solid transparent;min-width:0}
+  .tabbar a.on,.tabbar a:hover{border-top-color:var(--pink)}
+  body{padding-bottom:calc(var(--tabbar) + env(safe-area-inset-bottom,0px))}
+  html{scroll-padding-top:12px}
+}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 14px/1 var(--body);padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;text-decoration:none}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.btn.small{font-size:12px;padding:8px 10px}
-.btn:disabled{opacity:.6;cursor:default}
-.btn svg{width:16px;height:16px;flex:none}
+/* ================= LAYOUT ================= */
+.wrap{max-width:1180px;margin:0 auto;padding-inline:18px;padding-block:20px 60px;display:flex;flex-direction:column;gap:72px}
+.sec{display:flex;flex-direction:column;gap:20px}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.big{font:400 clamp(52px,13vw,128px)/.82 var(--display);text-transform:uppercase;letter-spacing:-.035em;
+  background:linear-gradient(95deg,var(--snow) 0%,var(--snow) 40%,var(--pink-2) 75%,var(--cyan) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.big-wrap{position:relative;display:flex;flex-direction:column;gap:12px}
+.big-wrap .sticker{position:absolute;top:-14px;right:0;transform:rotate(4deg)}
+.sub{font:600 18px/1.45 var(--body);color:var(--mute);max-width:62ch}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:800 italic 17px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;padding:13px 18px 12px;border:0;background:var(--s3);color:var(--snow);cursor:pointer;text-decoration:none;transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--pink)}
+.btn.hot{background:var(--pink);color:#fff;box-shadow:4px 4px 0 var(--snow)}
+.btn.hot:hover{box-shadow:6px 6px 0 var(--snow)}
+.btn.ice{background:var(--cyan);color:var(--bg)}
+.btn.small{font-size:14px;padding:9px 12px 8px}
+.btn:disabled{opacity:.55;cursor:default;transform:none;box-shadow:none}
+.btn svg{width:18px;height:18px;flex:none}
 .btn.spin svg{animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-.ownerbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px dashed var(--accent);border-radius:12px;padding:10px 12px}
-.ownerbar p{font-size:14px;color:var(--muted);max-width:60ch}
-.note{background:var(--accent);color:#fff;padding:14px 18px;border-radius:12px;font-weight:600;white-space:pre-line;position:relative}
-.note::before{content:"Ansage";display:block;font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin-bottom:6px}
+.ownerbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:2px dashed var(--pink);padding:12px 14px}
+.ownerbar p{font-size:15px;color:var(--mute);max-width:62ch}
+.note{background:var(--cyan);color:var(--bg);padding:18px 20px;font:700 20px/1.3 var(--body);white-space:pre-line;transform:rotate(-.6deg);box-shadow:6px 6px 0 var(--pink)}
+.note::before{content:"Ansage";display:block;font:900 italic 15px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
 
-/* ---------- LIVE STATUS ---------- */
-.live-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.live-dot{display:inline-flex;align-items:center;gap:8px;font:500 12px/1.3 var(--mono);color:var(--muted)}
-.live-dot i{width:9px;height:9px;border-radius:50%;background:var(--off);flex:none}
-.live-dot.on i{background:var(--ok);box-shadow:0 0 0 0 var(--ok);animation:pulse 2s infinite}
-.live-dot.err i{background:var(--warn)}
-@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 60%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
+/* ================= SCHNEE ================= */
+.live{display:inline-flex;align-items:center;gap:10px;font:700 italic 16px/1.3 var(--cond);letter-spacing:.05em;text-transform:uppercase;color:var(--mute)}
+.live i{width:10px;height:10px;border-radius:50%;background:var(--dim);flex:none}
+.live.on i{background:var(--lime);box-shadow:0 0 12px var(--lime)}
+.live.err i{background:var(--amber)}
+.snow-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px}
+@media (max-width:860px){.snow-grid{grid-template-columns:1fr}}
+.stakes-box{background:linear-gradient(160deg,var(--s2),var(--s1));padding:20px 18px 16px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
+.stakes-box h3{font:400 26px/1 var(--display);text-transform:uppercase}
+.stakes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:end}
+.stake{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.stake svg{width:100%;max-width:130px;height:auto;display:block}
+.stake .val{font:900 italic 46px/.9 var(--cond);font-variant-numeric:tabular-nums}
+.stake .val em{font-style:italic;font-size:.45em;color:var(--mute);margin-left:2px}
+.stake .name{font:800 italic 18px/1.1 var(--cond);text-transform:uppercase;letter-spacing:.03em;text-align:center}
+.stake .alt{font-size:13px;color:var(--mute)}
+.stake .fresh{font:800 italic 14px/1 var(--cond);letter-spacing:.05em;text-transform:uppercase;padding:5px 8px 4px;background:var(--s3);color:var(--mute)}
+.stake .fresh.hot{background:var(--pink);color:#fff;box-shadow:3px 3px 0 var(--snow)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start}
+.fact{background:var(--s1);padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0;border-left:4px solid var(--s3)}
+.fact.wide{grid-column:1/-1}
+.fact small{font:800 italic 14px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.fact b{font:900 italic 44px/.9 var(--cond);font-variant-numeric:tabular-nums}
+.fact b span{font-size:.5em;color:var(--mute)}
+.status{display:inline-flex;align-items:center;gap:10px;font:900 italic 30px/1 var(--cond);text-transform:uppercase}
+.status i{width:14px;height:14px;border-radius:50%;background:var(--dim)}
+.status.open i{background:var(--lime);box-shadow:0 0 14px var(--lime)}
+.status.partial i{background:var(--amber)}
+.fact.open{border-left-color:var(--lime)}
 
-.stakes-wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px}
-@media (max-width:760px){.stakes-wrap{grid-template-columns:1fr}}
-.stakes{display:flex;flex-direction:column;gap:12px}
-.stakes-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}
-.stake{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
-.stake svg{width:100%;max-width:120px;height:auto;display:block}
-.stake .val{font:900 34px/1 var(--display);font-variant-numeric:tabular-nums}
-.stake .val em{font-style:normal;font-size:.5em;color:var(--muted)}
-.stake .name{font-weight:700;font-size:14px;text-align:center;line-height:1.2}
-.stake .alt{font:400 11px/1 var(--mono);color:var(--muted)}
-.stake .fresh{font:700 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;padding:4px 6px;border-radius:4px;background:var(--chip);color:var(--muted)}
-.stake .fresh.hot{background:var(--accent);color:#fff}
-
-.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;align-content:start}
-.tiles>div{background:var(--paper);padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
-.tiles small{font:600 10.5px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.tiles b{font:800 30px/1 var(--display);font-variant-numeric:tabular-nums}
-.tiles b span{font-size:.55em;color:var(--muted)}
-.tiles .wide{grid-column:1/-1}
-.pill{display:inline-flex;align-items:center;gap:7px;font:700 13px/1 var(--body);padding:7px 10px;border-radius:999px;background:var(--chip);width:max-content;max-width:100%}
-.pill i{width:9px;height:9px;border-radius:50%;background:var(--off);flex:none}
-.pill.open i{background:var(--ok)}.pill.partial i{background:var(--warn)}
-
-/* ---------- MOUNTAIN ---------- */
-.mtn{display:flex;flex-direction:column;gap:14px;padding:0;overflow:hidden}
-.mtn-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;padding:18px 18px 0}
-.verdict{display:flex;flex-direction:column;gap:4px}
-.verdict b{font:900 clamp(26px,5.5vw,38px)/1 var(--display);text-transform:uppercase;transform:skewX(-9deg);transform-origin:left bottom}
-.verdict span{color:var(--muted);font-size:14px;max-width:52ch}
-.badge{font:800 13px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;padding:7px 10px 6px;background:var(--accent);color:#fff;transform:skewX(-9deg);white-space:nowrap}
+/* ================= NULLGRAD ================= */
+.mtn{background:var(--s1);display:flex;flex-direction:column;overflow:hidden}
+.mtn-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;padding:20px 18px 6px}
+.verdict{display:flex;flex-direction:column;gap:6px}
+.verdict b{font:400 clamp(28px,6vw,46px)/.95 var(--display);text-transform:uppercase;letter-spacing:-.02em}
+.verdict span{color:var(--mute);font-size:16px;max-width:56ch}
 .mtn-svg{display:block;width:100%;height:auto;max-width:100%}
-.mtn-svg text{font-family:var(--mono)}
-.mtn-svg .snowcap,.mtn-svg .zero,.mtn-svg .sline{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.mtn-svg text{font-family:var(--cond)}
+.mtn-svg .snowcap,.mtn-svg .zero,.mtn-svg .sline{transition:transform .8s cubic-bezier(.2,.8,.2,1)}
 .flake{animation:fall linear infinite}
 .drop{animation:rain linear infinite}
-@keyframes fall{from{transform:translate(0,-40px)}to{transform:translate(14px,420px)}}
-@keyframes rain{from{transform:translate(0,-30px)}to{transform:translate(-6px,420px)}}
-.days{display:flex;gap:8px;overflow-x:auto;padding:0 18px 18px;scrollbar-width:thin}
-.daybtn{flex:1 0 92px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border-radius:12px;border:1px solid var(--line);background:var(--bg);cursor:pointer;min-width:92px}
-.daybtn .dn{font:800 15px/1 var(--display);text-transform:uppercase;letter-spacing:.04em}
-.daybtn .dd{font:400 10.5px/1 var(--mono);color:var(--muted)}
-.daybtn svg{width:28px;height:28px}
-.daybtn .t{font:600 12px/1 var(--mono);font-variant-numeric:tabular-nums}
-.daybtn .sn{font:700 11px/1 var(--mono);color:var(--muted)}
-.daybtn .sn.hot{color:var(--accent)}
-.daybtn[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;background:var(--paper)}
+@keyframes fall{from{transform:translate(0,-40px)}to{transform:translate(14px,460px)}}
+@keyframes rain{from{transform:translate(0,-30px)}to{transform:translate(-6px,460px)}}
+.days{display:flex;gap:8px;overflow-x:auto;padding:14px 18px 18px;scrollbar-width:thin}
+.daybtn{flex:1 0 92px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border:0;background:var(--s2);cursor:pointer;min-width:92px;transition:transform .12s}
+.daybtn .dn{font:900 italic 22px/1 var(--cond);text-transform:uppercase}
+.daybtn .dd{font-size:12px;color:var(--mute)}
+.daybtn svg{width:30px;height:30px}
+.daybtn .t{font:700 15px/1 var(--cond);font-variant-numeric:tabular-nums}
+.daybtn .sn{font:800 italic 15px/1 var(--cond);color:var(--mute)}
+.daybtn .sn.hot{color:var(--pink-2)}
+.daybtn[aria-pressed="true"]{background:var(--pink);transform:translateY(-3px)}
+.daybtn[aria-pressed="true"] .dd,.daybtn[aria-pressed="true"] .sn{color:#fff}
 .mtn-foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:0 18px 16px}
 
-/* ---------- WEBCAMS ---------- */
-.camgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-@media (max-width:480px){.camgrid{grid-template-columns:1fr 1fr;gap:8px}}
-.cam{position:relative;border-radius:12px;overflow:hidden;background:var(--paper);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
-.cam-media{position:relative;aspect-ratio:16/10;max-width:100%;background:linear-gradient(160deg,var(--sky-top),var(--sky-bot));display:block;text-decoration:none}
-button.cam-media{cursor:zoom-in;border:0;padding:0;width:100%;text-align:left;font:inherit;color:inherit}
-.cam-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s}
-.cam:hover .cam-media img{transform:scale(1.04)}
-.cam-empty{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;gap:2px;color:var(--ink)}
-.cam-empty b{font:900 clamp(26px,6vw,34px)/1 var(--display);font-variant-numeric:tabular-nums}
-.cam-empty span{font:500 11px/1.2 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.cam-alt{position:absolute;left:8px;top:8px;font:800 14px/1 var(--display);letter-spacing:.04em;background:rgba(6,18,42,.72);color:#fff;padding:5px 8px 4px;transform:skewX(-9deg)}
-.cam-tip{position:absolute;right:8px;top:8px;font:800 12px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--accent);padding:5px 7px 4px;transform:skewX(-9deg)}
-.cam-live{position:absolute;left:8px;bottom:8px;display:inline-flex;align-items:center;gap:5px;font:500 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:rgba(6,18,42,.72);color:#fff;padding:5px 7px;border-radius:4px}
-.cam-live i{width:6px;height:6px;border-radius:50%;background:#ff3b3b}
-.cam-body{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;min-width:0}
-.cam-body div{display:flex;flex-direction:column;gap:1px;min-width:0}
-.cam-body strong{font-weight:700;font-size:14px;line-height:1.25;overflow-wrap:anywhere}
-.cam-body small{font:400 11px/1.2 var(--mono);color:var(--muted)}
-.cam-body a{font:600 11px/1 var(--mono);text-decoration:none;color:var(--ice);white-space:nowrap;padding:6px 0}
+/* ================= TABS (Karte/Radar) ================= */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{border:0;background:var(--s2);color:var(--mute);font:800 italic 17px/1 var(--cond);letter-spacing:.05em;text-transform:uppercase;padding:12px 16px 11px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--snow);color:var(--bg);box-shadow:4px 4px 0 var(--pink)}
+.frame{position:relative;background:var(--s1);border:1px solid var(--line)}
+.frame iframe{display:block;width:100%;height:min(72vh,640px);border:0;background:var(--s1)}
+.frame-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-top:1px solid var(--line)}
 
-/* ---------- LINKS / FACTS / DAYS / CHECK / CONTACTS ---------- */
-.links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media (max-width:560px){.links{grid-template-columns:1fr}}
-.link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--paper);border:1px solid var(--line);border-radius:12px;text-decoration:none;min-width:0;transition:border-color .15s,transform .15s}
-.link:hover{border-color:var(--accent);transform:translateY(-1px)}
-.link div{display:flex;flex-direction:column;gap:2px;min-width:0}
-.link strong{font-weight:700}
-.link span{font-size:13px;color:var(--muted)}
-.link em{font:600 12px/1 var(--mono);font-style:normal;color:var(--ice);white-space:nowrap}
-.facts{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:0}
-.fact{display:grid;grid-template-columns:160px minmax(0,1fr);gap:14px;padding:13px 16px;border-top:1px solid var(--line)}
-.fact:first-child{border-top:0}
-.fact dt{font:600 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
-.fact dd{margin:0;min-width:0}
-@media (max-width:520px){.fact{grid-template-columns:1fr;gap:4px}}
-.plan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-@media (max-width:640px){.plan{grid-template-columns:1fr}}
-.pday{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
-.pday .d{font:900 40px/1 var(--display);text-transform:uppercase;transform:skewX(-9deg);transform-origin:left bottom}
-.pday ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px}
-.pday.main{background:var(--night);color:var(--night-ink);border-color:var(--night)}
-.pday.main .eyebrow{color:var(--night-muted)}
-.pday.main::after{content:"";position:absolute;right:-30px;top:16px;width:120px;height:10px;background:var(--accent);transform:rotate(-30deg)}
-.check{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-@media (max-width:520px){.check{grid-template-columns:1fr}}
-.check label{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;background:var(--paper);border:1px solid var(--line);border-radius:10px;cursor:pointer}
-.check input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent);flex:none}
-.check input:checked + span{color:var(--muted);text-decoration:line-through}
-.contacts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media (max-width:560px){.contacts{grid-template-columns:1fr}}
-.contact{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
-.contact h3{font-size:22px;font-weight:800;text-transform:uppercase}
-.copyrow{display:flex;align-items:center;justify-content:space-between;gap:8px;font:400 14px/1.3 var(--mono);min-width:0}
+/* ================= SKI-NAVI ================= */
+.navi{display:grid;grid-template-columns:minmax(0,1fr) 360px;background:var(--s1);border:1px solid var(--line);min-height:560px}
+@media (max-width:900px){.navi{grid-template-columns:1fr}}
+.navi-map{position:relative;min-height:440px;background:#1b1830}
+@media (max-width:900px){.navi-map{height:62vh;min-height:380px}}
+.navi-map .leaflet-container{background:#1b1830;font-family:var(--body)}
+.navi-map .leaflet-tile-pane{filter:saturate(.75) brightness(.92)}
+.map-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:20px;z-index:500;background:rgba(8,6,15,.82);font:800 italic 20px/1.2 var(--cond);letter-spacing:.04em;text-transform:uppercase}
+.map-msg small{font:500 15px/1.4 var(--body);text-transform:none;letter-spacing:0;color:var(--mute);max-width:40ch}
+.loader{width:42px;height:42px;border:4px solid var(--s3);border-top-color:var(--pink);border-radius:50%;animation:spin .8s linear infinite}
+.navi-panel{display:flex;flex-direction:column;gap:14px;padding:18px;border-left:1px solid var(--line);min-width:0}
+@media (max-width:900px){.navi-panel{border-left:0;border-top:1px solid var(--line)}}
+.fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fld label{font:800 italic 14px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);display:flex;align-items:center;gap:8px}
+.fld label i{width:12px;height:12px;border-radius:50%;border:3px solid var(--snow)}
+.fld label i.a{background:var(--lime)}
+.fld label i.b{background:var(--pink)}
+.pick{display:flex;gap:6px}
+.pick input,.pick select{flex:1;min-width:0;font:600 16px/1.2 var(--body);padding:12px;background:var(--bg);color:var(--snow);border:1px solid var(--line-2)}
+.pick button{flex:none;border:0;background:var(--s3);color:var(--snow);width:46px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.pick button svg{width:20px;height:20px}
+.pick button.on{background:var(--lime);color:var(--bg)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.seg button{border:0;background:var(--s2);color:var(--mute);font:800 italic 15px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase;padding:11px 4px 10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.seg button i{width:10px;height:10px;border-radius:50%}
+.seg button[aria-pressed="true"]{background:var(--snow);color:var(--bg)}
+.route-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.route-sum div{background:var(--bg);padding:10px;display:flex;flex-direction:column;gap:4px}
+.route-sum b{font:900 italic 26px/.95 var(--cond);font-variant-numeric:tabular-nums;white-space:nowrap}
+.route-sum small{font:700 italic 12px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:300px;overflow:auto}
+.steps li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 8px;background:var(--bg)}
+.steps .ic{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font:900 italic 13px/1 var(--cond)}
+.steps .ic.lift{background:var(--snow);color:var(--bg)}
+.steps .ic svg{width:20px;height:20px}
+.steps b{font:700 16px/1.2 var(--body);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.steps span{font-size:13px;color:var(--mute)}
+.steps em{font:800 italic 15px/1 var(--cond);font-style:italic;color:var(--mute);white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:10px 14px;font:700 italic 14px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:18px;height:5px;display:inline-block}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--s1);color:var(--snow);border-radius:0;box-shadow:5px 5px 0 var(--pink)}
+.leaflet-popup-content{margin:12px 14px;font:500 15px/1.35 var(--body)}
+.leaflet-popup-content b{font:900 italic 20px/1 var(--cond);text-transform:uppercase;display:block;margin-bottom:4px}
+.leaflet-container a.leaflet-popup-close-button{color:var(--mute)}
+.leaflet-control-attribution{background:rgba(8,6,15,.7)!important;color:var(--mute)!important;font-size:10px}
+.leaflet-control-attribution a{color:var(--snow)!important}
+.leaflet-bar a{background:var(--s1)!important;color:var(--snow)!important;border-color:var(--line)!important}
+.pin{width:22px;height:22px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 3px rgba(0,0,0,.35),0 0 18px currentColor}
+.pin.a{background:var(--lime);color:var(--lime)}
+.pin.b{background:var(--pink);color:var(--pink)}
+.me-dot{width:18px;height:18px;border-radius:50%;background:var(--cyan);border:3px solid #fff;box-shadow:0 0 0 8px rgba(41,230,255,.25)}
+
+/* ================= RADAR ================= */
+.radar{position:relative;background:var(--s1);border:1px solid var(--line)}
+.radar-map{height:min(70vh,600px);min-height:380px}
+.radar-ctl{display:flex;align-items:center;gap:12px;padding:12px;border-top:1px solid var(--line);flex-wrap:wrap}
+.radar-ctl input[type=range]{flex:1;min-width:140px;accent-color:var(--pink)}
+.radar-time{font:900 italic 26px/1 var(--cond);font-variant-numeric:tabular-nums;min-width:120px}
+.radar-scale{display:flex;align-items:center;gap:8px;font:700 italic 13px/1 var(--cond);text-transform:uppercase;letter-spacing:.06em;color:var(--mute)}
+.radar-scale i{width:120px;height:8px;background:linear-gradient(90deg,#88ddee,#0099cc,#0077aa,#005588,#ffee00,#ffaa00,#ff4400,#c10000,#ffffff)}
+
+/* ================= WEBCAMS ================= */
+.camgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:980px){.camgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){.camgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cam{position:relative;overflow:hidden;background:var(--s2);min-width:0}
+.cam.feat{grid-column:span 2;grid-row:span 2}
+.cam button{display:block;width:100%;height:100%;border:0;padding:0;background:none;cursor:zoom-in;text-align:left;aspect-ratio:16/10;position:relative;max-width:100%}
+.cam.feat button{aspect-ratio:auto;min-height:100%}
+.cam img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s,filter .3s}
+.cam:hover img{transform:scale(1.06);filter:saturate(1.2)}
+.cam::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(8,6,15,.9));pointer-events:none}
+.cam-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 italic 30px/1 var(--cond);color:var(--dim)}
+.cam-cap{position:absolute;left:10px;right:10px;bottom:9px;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;gap:8px;pointer-events:none}
+.cam-cap b{font:900 italic 20px/1 var(--cond);text-transform:uppercase;letter-spacing:.02em;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.cam.feat .cam-cap b{font-size:34px}
+.cam-cap span{font:800 italic 14px/1 var(--cond);background:var(--snow);color:var(--bg);padding:4px 6px 3px;white-space:nowrap}
+.cam-top{position:absolute;left:8px;top:8px;z-index:2;display:flex;gap:6px}
+.cam-top em{font:800 italic 12px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;font-style:italic;background:var(--pink);color:#fff;padding:4px 6px 3px}
+.cam-top time{font:700 12px/1 var(--cond);background:rgba(8,6,15,.75);padding:4px 6px 3px}
+.cam a.live{position:absolute;right:8px;top:8px;z-index:3;font:800 italic 12px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;background:rgba(8,6,15,.75);padding:5px 7px 4px;text-decoration:none}
+
+/* ================= MEHR ================= */
+.more{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.more{grid-template-columns:1fr}}
+.card{background:var(--s1);padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card h3{font:400 26px/1 var(--display);text-transform:uppercase}
+.plan{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.plan li{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px}
+.plan .d{font:900 italic 24px/1 var(--cond);color:var(--pink-2)}
+.plan p{font-size:15px;color:var(--mute)}
+.plan p b{color:var(--snow);font-weight:700}
+.check{display:flex;flex-direction:column;gap:4px}
+.check label{display:flex;gap:10px;align-items:center;padding:9px 10px;background:var(--bg);cursor:pointer;font-size:15px}
+.check input{width:20px;height:20px;margin:0;accent-color:var(--pink);flex:none}
+.check input:checked + span{color:var(--dim);text-decoration:line-through}
+.contact{display:flex;flex-direction:column;gap:4px;padding:10px;background:var(--bg)}
+.contact b{font:800 italic 17px/1.1 var(--cond);text-transform:uppercase;letter-spacing:.03em}
+.copyrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:15px}
 .copyrow span{user-select:all;overflow-wrap:anywhere}
-.copyrow button{font:600 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);background:var(--chip);color:var(--ink);padding:6px 8px;border-radius:5px;cursor:pointer;flex:none}
-footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:18px}
+.copyrow button{flex:none;border:0;background:var(--s3);color:var(--snow);font:800 italic 12px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;padding:6px 8px 5px;cursor:pointer}
+.linklist{display:flex;flex-direction:column;gap:4px}
+.linklist a{display:flex;justify-content:space-between;gap:10px;padding:10px;background:var(--bg);text-decoration:none;font-weight:600}
+.linklist a span{color:var(--cyan);font:800 italic 14px/1.4 var(--cond)}
+footer{color:var(--dim);font-size:13px;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:18px}
 
-/* ---------- DIALOGS ---------- */
-dialog{border:0;padding:0;border-radius:16px;background:var(--paper);color:var(--ink);width:min(620px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
-dialog::backdrop{background:rgba(3,8,18,.62)}
+/* ================= DIALOGE ================= */
+dialog{border:0;padding:0;background:var(--s1);color:var(--snow);width:min(620px,calc(100vw - 24px));max-height:calc(100dvh - 24px);box-shadow:8px 8px 0 var(--pink)}
+dialog::backdrop{background:rgba(3,2,8,.75)}
 .ed{display:flex;flex-direction:column;max-height:calc(100dvh - 24px)}
 .ed-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
-.ed-head h3{font-size:26px;text-transform:uppercase}
+.ed-head h3{font:400 26px/1 var(--display);text-transform:uppercase}
 .ed-body{overflow:auto;padding:16px 18px;display:flex;flex-direction:column;gap:20px}
 .ed-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--line);flex-wrap:wrap}
 .ed fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
-.ed legend{font:800 18px/1 var(--display);text-transform:uppercase;letter-spacing:.03em;margin-bottom:10px;padding:0}
-.ed .hint{font-size:13px;color:var(--muted)}
+.ed legend{font:900 italic 20px/1 var(--cond);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;padding:0;color:var(--pink-2)}
+.ed .hint{font-size:14px;color:var(--mute)}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 @media (max-width:480px){.grid3{grid-template-columns:1fr 1fr}}
-.f{display:flex;flex-direction:column;gap:4px;min-width:0}
-.f label{font:600 11px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.f input,.f select,.f textarea{font:15px/1.3 var(--body);padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
-.f textarea{min-height:72px;resize:vertical}
-.msg{font-size:13px;color:var(--muted)}
-.msg.err{color:var(--accent)}
-.lb{width:min(1100px,calc(100vw - 24px))}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f label{font:800 italic 13px/1.2 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.f input,.f select,.f textarea{font:16px/1.3 var(--body);padding:10px;border:1px solid var(--line-2);background:var(--bg);color:var(--snow);width:100%;min-width:0}
+.f textarea{min-height:76px;resize:vertical}
+.msg{font-size:14px;color:var(--mute)}
+.msg.err{color:var(--pink-2)}
+.lb{width:min(1200px,calc(100vw - 24px))}
 .lb-body{display:flex;flex-direction:column}
-.lb-body img{width:100%;height:auto;display:block;background:var(--chip);max-height:calc(100dvh - 160px);object-fit:contain}
+.lb-body img{width:100%;height:auto;display:block;background:var(--s2);max-height:calc(100dvh - 150px);object-fit:contain}
 .lb-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;flex-wrap:wrap}
-.lb-foot h3{font-size:24px;text-transform:uppercase}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:14px;z-index:10;max-width:calc(100vw - 32px)}
+.lb-foot h3{font:900 italic 30px/1 var(--cond);text-transform:uppercase}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabbar) + 18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) rotate(-1deg);background:var(--snow);color:var(--bg);padding:12px 16px;font:800 italic 17px/1.2 var(--cond);letter-spacing:.03em;text-transform:uppercase;z-index:1000;max-width:calc(100vw - 32px);box-shadow:5px 5px 0 var(--pink)}
+@media (min-width:821px){.toast{bottom:24px}}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *{transition:none!important}
-  .flake,.drop,.live-dot.on i,.btn.spin svg{animation:none!important}
+  .hero-cam,.marquee-track,.flake,.drop,.sticker i,.btn.spin svg,.loader{animation:none!important}
 }
 </style>
 </head>
 <body>
 
 <header class="hero" id="top">
-  <canvas id="snowfx" aria-hidden="true"></canvas>
-  <div class="hero-inner">
-    <div class="hero-top"><span>Silvretta Arena · <b>Ischgl / Samnaun</b></span><span>Saison <b>2026/27</b></span></div>
+  <img class="hero-cam" id="hero-cam" alt="" hidden>
+  <div class="hero-in">
+    <div class="hero-top">
+      <span class="sticker"><i></i><span id="hero-cam-lbl">Live · Idalp 2.320 m</span></span>
+      <span class="sticker pink">Silvretta Arena · 26/27</span>
+    </div>
     <h1>Ischgl</h1>
-    <div class="hero-sub">
-      <span class="tag"><span>Opening 2026</span></span>
-      <span class="hero-facts">239 km Piste · 2.872 m Gipfel · 46 Anlagen</span>
+    <div class="hero-open"><span class="o">Opening</span><span class="d">26.11.</span></div>
+    <div class="count" aria-label="Countdown bis zum ersten Lift">
+      <div><b id="cd-d">--</b><small>Tage</small></div><span class="sep">:</span>
+      <div><b id="cd-h">--</b><small>Std</small></div><span class="sep">:</span>
+      <div><b id="cd-m">--</b><small>Min</small></div><span class="sep">:</span>
+      <div><b id="cd-s">--</b><small>Sek</small></div>
     </div>
-    <div class="clock" aria-live="off">
-      <div class="digits" id="clock"><span id="cd-d">--</span><small>T</small> <span id="cd-hms">--:--:--</span></div>
-      <div class="lbl" id="cd-note">bis zum ersten Lift<br>Do 26.11.2026</div>
-    </div>
-    <div class="ticker" id="ticker">
-      <div class="tick"><small>Gipfel jetzt</small><b id="tk-top">–</b></div>
-      <div class="tick"><small>Nullgradgrenze</small><b id="tk-zero">–</b></div>
-      <div class="tick"><small>Neuschnee 7 Tage</small><b id="tk-fc">–</b></div>
-      <div class="tick"><small>Schnee Idalp</small><b id="tk-depth">–</b></div>
-    </div>
+    <p class="hero-note" id="cd-note">bis der erste Lift läuft</p>
   </div>
-  <svg class="hero-ridges" viewBox="0 0 1440 170" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 120 L120 70 L210 98 L330 30 L420 84 L520 52 L610 92 L720 18 L820 76 L930 44 L1040 96 L1150 36 L1260 82 L1360 58 L1440 88 L1440 170 L0 170Z" fill="#2a5b98" opacity=".55"/>
-    <path d="M0 140 L90 112 L190 132 L300 84 L380 118 L480 92 L600 128 L700 74 L790 112 L900 90 L1010 126 L1120 82 L1230 120 L1330 98 L1440 124 L1440 170 L0 170Z" fill="#8fb9e2" opacity=".55"/>
-    <path d="M0 158 L140 140 L260 152 L400 128 L520 150 L660 132 L800 154 L940 136 L1080 156 L1220 138 L1340 152 L1440 142 L1440 170 L0 170Z" style="fill:var(--bg)"/>
-  </svg>
 </header>
 
-<nav class="nav" aria-label="Bereiche">
-  <div class="nav-inner" id="navlinks">
-    <a href="#schnee">Schnee</a><a href="#nullgrad">Nullgrad</a><a href="#webcams">Webcams</a><a href="#ablauf">Ablauf</a><a href="#tickets">Tickets</a><a href="#anreise">Anreise</a><a href="#packliste">Packliste</a><a href="#live">Links</a>
+<div class="marquee-wrap"><div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"><span>Ischgl Opening</span><span>Saisonstart 26.11.</span><span>239 km Piste</span><span>2.872 m Greitspitze</span><span>Ischgl Opening</span><span>Saisonstart 26.11.</span><span>239 km Piste</span><span>2.872 m Greitspitze</span></div></div></div>
+
+<nav class="tabbar" aria-label="Bereiche">
+  <div class="tabbar-in" id="navlinks">
+    <a href="#schnee"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7"/></svg><span>Schnee</span></a>
+    <a href="#karte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M2 20l7-14 4 7 3-4 6 11z"/></svg><span>Pisten</span></a>
+    <a href="#radar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M7 15a5 5 0 1 1 9.6-2H17a3.5 3.5 0 0 1 0 7H7a3 3 0 0 1 0-5z"/></svg><span>Radar</span></a>
+    <a href="#webcams"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12"/><path d="M16 10l5-3v10l-5-3"/></svg><span>Cams</span></a>
+    <a href="#mehr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Mehr</span></a>
   </div>
 </nav>
 
@@ -300,147 +357,172 @@ dialog::backdrop{background:rgba(3,8,18,.62)}
 
   <div class="ownerbar" id="ownerbar" hidden>
     <p id="ownerbar-text">Status des Skigebiets, Lifte und die Ansage an die Gruppe pflegst du hier. Schnee und Wetter kommen automatisch.</p>
-    <button class="btn primary" type="button" id="btn-edit">Daten bearbeiten</button>
+    <button class="btn hot small" type="button" id="btn-edit">Daten bearbeiten</button>
   </div>
 
   <div class="note" id="group-note" hidden></div>
 
-  <!-- LIVE SNOW -->
-  <section class="section" id="schnee">
-    <div class="section-head">
-      <span class="eyebrow">Live aus Ischgl</span>
-      <div class="row">
-        <h2>Schneelage</h2>
-        <button class="btn" type="button" id="btn-refresh" aria-label="Schnee und Wetter jetzt aktualisieren">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
-          <span>Aktualisieren</span>
-        </button>
-      </div>
+  <!-- SCHNEE -->
+  <section class="sec" id="schnee">
+    <div class="sec-head">
+      <div class="big-wrap"><h2 class="big">Schnee&shy;lage</h2></div>
+      <button class="btn ice" type="button" id="btn-refresh">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+        <span>Aktualisieren</span>
+      </button>
     </div>
-    <div class="live-bar">
-      <span class="live-dot" id="live-state"><i></i><span id="live-text">Lade aktuellen Stand …</span></span>
-      <span class="stamp" id="live-src"></span>
-    </div>
-    <div class="stakes-wrap">
-      <div class="panel stakes">
-        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline">
-          <h3 style="font-size:22px;text-transform:uppercase">Schneepegel</h3>
-          <span class="stamp" id="stake-src">Messstationen</span>
-        </div>
-        <div class="stakes-row" id="stakes"></div>
-        <span class="stamp" id="stake-last"></span>
+    <span class="live" id="live-state"><i></i><span id="live-text">Lade aktuellen Stand …</span></span>
+    <div class="snow-grid">
+      <div class="stakes-box">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap"><h3>Schneepegel</h3><span class="small" id="stake-src"></span></div>
+        <div class="stakes" id="stakes"></div>
+        <span class="small" id="stake-last"></span>
       </div>
-      <div class="tiles">
-        <div class="wide"><small>Skigebiet</small><span class="pill" id="st-pill"><i></i><span id="st-label">–</span></span><span class="stamp" id="st-note"></span></div>
-        <div><small>Lifte offen</small><b id="st-lifts">–</b></div>
-        <div><small>Pisten offen</small><b id="st-slopes">–</b></div>
-        <div><small>Gipfel 2.872 m</small><b id="st-ttop">–</b></div>
-        <div><small>Tal 1.377 m</small><b id="st-tval">–</b></div>
+      <div class="facts">
+        <div class="fact wide" id="st-box"><small>Skigebiet</small><span class="status" id="st-pill"><i></i><span id="st-label">–</span></span><span class="small" id="st-note"></span></div>
+        <div class="fact"><small>Lifte offen</small><b id="st-lifts">–</b></div>
+        <div class="fact"><small>Pisten offen</small><b id="st-slopes">–</b></div>
+        <div class="fact"><small>Gipfel jetzt</small><b id="st-ttop">–</b></div>
+        <div class="fact"><small>Ischgl jetzt</small><b id="st-tval">–</b></div>
       </div>
     </div>
   </section>
 
-  <!-- FREEZING LEVEL MOUNTAIN -->
-  <section class="section" id="nullgrad">
-    <div class="section-head">
-      <span class="eyebrow">Prognose 7 Tage · Open-Meteo</span>
-      <h2>Nullgradgrenze</h2>
-      <p class="lead">Oberhalb der orangen Linie hat es Minusgrade, dort bleibt Schnee liegen. Fällt Niederschlag, kommt er etwa ab der blauen Linie als Schnee runter. Tag antippen zum Wechseln.</p>
+  <!-- NULLGRAD -->
+  <section class="sec" id="nullgrad">
+    <div class="big-wrap">
+      <h2 class="big">0°-Grenze</h2>
+      <p class="sub">Über der pinken Linie friert's, da bleibt der Schnee liegen. Fällt was vom Himmel, kommt es ab der blauen Linie als Schnee runter.</p>
     </div>
-    <div class="panel mtn">
+    <div class="mtn">
       <div class="mtn-head">
         <div class="verdict"><b id="mt-title">Lade Prognose …</b><span id="mt-text"></span></div>
-        <span class="badge" id="mt-badge" hidden></span>
+        <span class="sticker pink" id="mt-badge" hidden></span>
       </div>
       <svg class="mtn-svg" id="mtn" viewBox="0 0 1000 440" role="img" aria-label="Berg mit Nullgradgrenze"></svg>
       <div class="days" id="days" role="group" aria-label="Tag wählen"></div>
-      <div class="mtn-foot"><span class="stamp" id="mt-src">Quelle: Open-Meteo</span><span class="stamp">Temperaturen = Tageshöchstwert</span></div>
+      <div class="mtn-foot"><span class="small" id="mt-src">Open-Meteo</span><span class="small">Temperaturen = Tageshöchstwert · Gipfel / Tal</span></div>
     </div>
+  </section>
+
+  <!-- PISTENPLAN -->
+  <section class="sec" id="karte">
+    <div class="sec-head">
+      <div class="big-wrap"><h2 class="big">Pisten&shy;plan</h2></div>
+      <div class="tabs" role="tablist" aria-label="Pistenplan">
+        <button class="tab" role="tab" aria-selected="true" data-pane="pane-navi" id="tab-navi">Ski-Navi</button>
+        <button class="tab" role="tab" aria-selected="false" data-pane="pane-live" id="tab-live">Live-Status offiziell</button>
+      </div>
+    </div>
+
+    <div id="pane-navi" role="tabpanel" aria-labelledby="tab-navi">
+      <div class="navi">
+        <div class="navi-map" id="navi-map">
+          <div class="map-msg" id="navi-msg"><div class="loader"></div><span>Lade Pisten &amp; Lifte …</span><small>Beim allerersten Mal holt der Server alle Pisten der Silvretta Arena aus OpenStreetMap. Das dauert bis zu einer Minute.</small></div>
+        </div>
+        <div class="navi-panel">
+          <div class="fld"><label for="nv-from"><i class="a"></i>Start</label>
+            <div class="pick"><select id="nv-from"><option value="">Lift wählen oder auf Karte tippen</option></select>
+              <button type="button" id="nv-gps" title="Mein Standort als Start" aria-label="Mein Standort als Start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button></div></div>
+          <div class="fld"><label for="nv-to"><i class="b"></i>Ziel</label>
+            <div class="pick"><select id="nv-to"><option value="">Lift wählen oder auf Karte tippen</option></select>
+              <button type="button" id="nv-swap" title="Start und Ziel tauschen" aria-label="Start und Ziel tauschen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/></svg></button></div></div>
+          <div class="fld"><label>Pisten bis</label>
+            <div class="seg" id="nv-level">
+              <button type="button" data-l="1" aria-pressed="false"><i style="background:var(--p-easy)"></i>Blau</button>
+              <button type="button" data-l="2" aria-pressed="true"><i style="background:var(--p-int)"></i>Rot</button>
+              <button type="button" data-l="4" aria-pressed="false"><i style="background:#fff"></i>Alles</button>
+            </div></div>
+          <div class="small" id="nv-tap">Karte antippen setzt den <b>Start</b>.</div>
+          <div id="nv-result" hidden>
+            <div class="route-sum"><div><small>Dauer</small><b id="nv-time">–</b></div><div><small>Piste</small><b id="nv-km">–</b></div><div><small>Lifte</small><b id="nv-lifts">–</b></div></div>
+            <ol class="steps" id="nv-steps"></ol>
+          </div>
+          <div class="small" id="nv-err" hidden></div>
+          <div class="legend"><span><i style="background:var(--p-easy)"></i>Blau</span><span><i style="background:var(--p-int)"></i>Rot</span><span><i style="background:#000;outline:1px solid #888"></i>Schwarz</span><span><i style="background:var(--p-route)"></i>Skiroute</span><span><i style="background:#fff"></i>Lift</span></div>
+          <p class="small">Lift zu? Auf der Karte antippen und „Gesperrt“ wählen, dann fährt dich das Navi drumherum. Den echten Status zeigt der Tab „Live-Status offiziell“.</p>
+          <p class="small" id="nv-src"></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="pane-live" role="tabpanel" aria-labelledby="tab-live" hidden>
+      <div class="frame">
+        <iframe id="live-map" title="Interaktiver Pistenplan Silvretta Arena" data-src="https://winter.intermaps.com/silvretta_arena?lang=de" allow="fullscreen; geolocation" loading="lazy"></iframe>
+        <div class="frame-bar"><span class="small">Offizieller Pistenplan mit Live-Status aller Lifte und Pisten (Intermaps)</span><a class="btn small" href="https://winter.intermaps.com/silvretta_arena?lang=de" target="_blank" rel="noopener">Vollbild ↗</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RADAR -->
+  <section class="sec" id="radar">
+    <div class="sec-head">
+      <div class="big-wrap"><h2 class="big">Wetter&shy;radar</h2></div>
+      <div class="tabs" role="tablist" aria-label="Wetterkarte">
+        <button class="tab" role="tab" aria-selected="true" data-wx="radar">Radar live</button>
+        <button class="tab" role="tab" aria-selected="false" data-wx="snowAccu">Neuschnee</button>
+        <button class="tab" role="tab" aria-selected="false" data-wx="deg0">0°-Grenze</button>
+        <button class="tab" role="tab" aria-selected="false" data-wx="wind">Wind</button>
+      </div>
+    </div>
+    <div class="radar" id="radar-pane">
+      <div class="radar-map" id="radar-map"><div class="map-msg" id="radar-msg"><div class="loader"></div><span>Lade Radar …</span></div></div>
+      <div class="radar-ctl">
+        <button class="btn small hot" type="button" id="rd-play" aria-label="Abspielen oder anhalten">▶ Play</button>
+        <input type="range" id="rd-slider" min="0" max="0" value="0" aria-label="Zeitpunkt">
+        <span class="radar-time" id="rd-time">--:--</span>
+        <span class="radar-scale">leicht <i></i> stark</span>
+      </div>
+    </div>
+    <div class="frame" id="windy-pane" hidden>
+      <iframe id="windy" title="Wetterkarte Windy"></iframe>
+      <div class="frame-bar"><span class="small" id="windy-lbl">Prognose-Karte von Windy.com</span><a class="btn small" id="windy-open" href="https://www.windy.com/46.970/10.290?46.9,10.3,9" target="_blank" rel="noopener">Windy ↗</a></div>
+    </div>
+    <p class="small">Radar: RainViewer, letzte 2 Stunden. Prognosen: Windy.com.</p>
   </section>
 
   <!-- WEBCAMS -->
-  <section class="section" id="webcams">
-    <div class="section-head">
-      <span class="eyebrow">16 Kameras · alle 5 Minuten neu</span>
-      <h2>Webcams</h2>
-      <p class="lead">Vom Dorf bis zum Gipfel, sortiert nach Höhe. Idalp und Pardatschgrat zeigen am besten, wie viel Schnee auf den Hauptpisten liegt. Antippen vergrößert, „Live“ öffnet den Livestream.</p>
-    </div>
+  <section class="sec" id="webcams">
+    <div class="big-wrap"><h2 class="big">Cams</h2><p class="sub">16 Kameras vom Dorf bis auf 2.872 m, alle 5 Minuten neu. Antippen zum Vergrößern.</p></div>
     <div class="camgrid" id="cams"></div>
   </section>
 
-  <!-- PLAN -->
-  <section class="section" id="ablauf">
-    <div class="section-head"><span class="eyebrow">Opening-Wochenende</span><h2>Ablauf</h2></div>
-    <div class="plan">
-      <div class="pday"><span class="eyebrow">Donnerstag</span><span class="d">26.11.</span><ul><li>Saisonstart Silvretta Arena</li><li>Ab heute alle Kassen 08:00–17:00</li></ul></div>
-      <div class="pday main"><span class="eyebrow">Samstag</span><span class="d">28.11.</span><ul><li>Skitag, Tagesticket = Konzerteintritt</li><li>16:30 Einlass Parkplatz P1</li><li>18:00 Top of the Mountain Concert</li><li>Kasse Silvrettabahn A1 bis 18:30</li></ul></div>
-      <div class="pday"><span class="eyebrow">Sonntag</span><span class="d">29.11.</span><ul><li>Skitag</li><li>Wer erst Sa anreist: Tagesticket auf So datieren lassen</li></ul></div>
-    </div>
-  </section>
-
-  <!-- TICKETS -->
-  <section class="section" id="tickets">
-    <div class="section-head"><span class="eyebrow">Skipass</span><h2>Tickets</h2></div>
-    <dl class="facts">
-      <div class="fact"><dt>Tagesskipass 28.11.</dt><dd><b class="num">100 €</b> Erwachsene/Senioren, <b class="num">62 €</b> Kinder unter 17. Unter 8 frei mit Elternteil. Gilt auch als Konzertticket.</dd></div>
-      <div class="fact"><dt>Mehrtagespass</dt><dd>Mehrtages-Skipässe gelten auch als Eintritt zum Konzert.</dd></div>
-      <div class="fact"><dt>Nicht verfügbar</dt><dd>Am 28.11. kein Tagespass ohne Konzert, kein Halbtags-, Nachmittags-, Schmuggler- oder Berg-/Talticket.</dd></div>
-      <div class="fact"><dt>Snow Card Tirol</dt><dd>Gilt am 28.11. nicht. Mit Vorlage gibt es den Tagespass inkl. Konzert für 62 €.</dd></div>
-      <div class="fact"><dt>Gruppen ab 20</dt><dd>Vorher per Mail bei <span style="user-select:all">info@silvretta.at</span> anmelden, dann gibt es ein Ticketkontingent.</dd></div>
-      <div class="fact"><dt>Kassen</dt><dd>Ab 26.11. alle Kassen 08:00–17:00. Am 28.11. hat die Kasse Silvrettabahn A1 bis 18:30 offen.</dd></div>
-    </dl>
-    <div class="links">
-      <a class="link" href="https://tickets.ischgl.com/en/winter/store#/en/buy?skugroup_id=4214&product_id=23974" target="_blank" rel="noopener"><div><strong>Skipass 28.11. kaufen</strong><span>Offizieller Ticketshop der Silvrettaseilbahn</span></div><em>tickets ↗</em></a>
-      <a class="link" href="https://www.ischgl.com/de/veranstaltungen-erlebnisse/topevents/westlife_event_42210307" target="_blank" rel="noopener"><div><strong>Infos zum Opening-Wochenende</strong><span>Eventseite des Veranstalters</span></div><em>ischgl.com ↗</em></a>
-    </div>
-  </section>
-
-  <!-- TRAVEL -->
-  <section class="section" id="anreise">
-    <div class="section-head"><span class="eyebrow">Hin &amp; zurück</span><h2>Anreise</h2></div>
-    <dl class="facts">
-      <div class="fact"><dt>Bahn</dt><dd>Nächster Bahnhof ist Landeck-Zams.</dd></div>
-      <div class="fact"><dt>Bus</dt><dd>Linie 260 ab Landeck-Zams bis zur Talstation Silvrettabahn. Mit Skiausrüstung kostenlos.</dd></div>
-      <div class="fact"><dt>Talstation</dt><dd>Silvrettabahn, Silvrettaplatz, 6561 Ischgl</dd></div>
-      <div class="fact"><dt>Neu diesen Winter</dt><dd>Höllkar-Bahn als weitere neue 8er-Sesselbahn der D-Line.</dd></div>
-    </dl>
-  </section>
-
-  <!-- CHECKLIST -->
-  <section class="section" id="packliste">
-    <div class="section-head"><span class="eyebrow">Wird nur auf deinem Gerät gespeichert</span><h2>Packliste</h2></div>
-    <div class="check" id="check"></div>
-  </section>
-
-  <!-- LIVE LINKS -->
-  <section class="section" id="live">
-    <div class="section-head"><span class="eyebrow">Zum Gegenchecken</span><h2>Links</h2></div>
-    <div class="links">
-      <a class="link" href="https://www.ischgl.com/de/winter/schneebericht" target="_blank" rel="noopener"><div><strong>Schneebericht</strong><span>Offiziell, Messstationen</span></div><em>ischgl.com ↗</em></a>
-      <a class="link" href="https://www.ischgl.com/de/winter/silvretta-arena/geoeffnete-anlagen" target="_blank" rel="noopener"><div><strong>Offene Lifte &amp; Pisten</strong><span>Live-Status aller Anlagen</span></div><em>ischgl.com ↗</em></a>
-      <a class="link" href="https://www.snow-forecast.com/resorts/Ischgl/6day/top" target="_blank" rel="noopener"><div><strong>Schneeprognose Gipfel</strong><span>6 Tage, Neuschnee, Wind</span></div><em>snow-forecast ↗</em></a>
-      <a class="link" href="https://lawinen.report" target="_blank" rel="noopener"><div><strong>Lawinenlage Tirol</strong><span>Wichtig für alles abseits der Piste</span></div><em>lawinen.report ↗</em></a>
-    </div>
-  </section>
-
-  <!-- CONTACTS -->
-  <section class="section" id="kontakt">
-    <div class="section-head"><span class="eyebrow">Falls was ist</span><h2>Kontakte</h2></div>
-    <div class="contacts">
-      <div class="contact"><h3>Silvrettaseilbahn AG</h3><span class="stamp">Lifte, Skipässe</span>
-        <div class="copyrow"><span>+43 5444 606</span><button type="button" data-copy="+43 5444 606">Kopieren</button></div>
-        <div class="copyrow"><span>office@silvretta.at</span><button type="button" data-copy="office@silvretta.at">Kopieren</button></div>
+  <!-- MEHR -->
+  <section class="sec" id="mehr">
+    <div class="big-wrap"><h2 class="big">Mehr</h2></div>
+    <div class="more">
+      <div class="card">
+        <h3>Wochenende</h3>
+        <ul class="plan">
+          <li><span class="d">Do 26.</span><p><b>Saisonstart.</b> Erster Skitag, alle Kassen 08–17 Uhr.</p></li>
+          <li><span class="d">Sa 28.</span><p><b>Top of the Mountain Concert</b> auf P1, Einlass 16:30, Start 18:00. Tagesskipass gilt als Ticket.</p></li>
+          <li><span class="d">So 29.</span><p><b>Skitag.</b> Wer erst Samstag ankommt: Tagesticket auf Sonntag datieren lassen.</p></li>
+        </ul>
       </div>
-      <div class="contact"><h3>Tourismusverband Paznaun-Ischgl</h3><span class="stamp">Unterkunft, Infos vor Ort</span>
-        <div class="copyrow"><span>+43 50990 100</span><button type="button" data-copy="+43 50990 100">Kopieren</button></div>
-        <div class="copyrow"><span>info@paznaun-ischgl.com</span><button type="button" data-copy="info@paznaun-ischgl.com">Kopieren</button></div>
+      <div class="card">
+        <h3>Packliste</h3>
+        <div class="check" id="check"></div>
+        <span class="small">Wird nur auf deinem Handy gespeichert.</span>
+      </div>
+      <div class="card">
+        <h3>Wichtig</h3>
+        <div class="contact"><b>Silvrettaseilbahn</b>
+          <div class="copyrow"><span>+43 5444 606</span><button type="button" data-copy="+43 5444 606">Kopieren</button></div></div>
+        <div class="contact"><b>Tourismusverband</b>
+          <div class="copyrow"><span>+43 50990 100</span><button type="button" data-copy="+43 50990 100">Kopieren</button></div></div>
+        <div class="contact"><b>Notruf Bergrettung</b>
+          <div class="copyrow"><span>140</span><button type="button" data-copy="140">Kopieren</button></div></div>
+        <div class="linklist">
+          <a href="https://www.ischgl.com/de/winter/schneebericht" target="_blank" rel="noopener">Schneebericht <span>ischgl.com ↗</span></a>
+          <a href="https://lawinen.report" target="_blank" rel="noopener">Lawinenlage Tirol <span>lawinen.report ↗</span></a>
+        </div>
       </div>
     </div>
   </section>
 
   <footer>
-    <span>Schneehöhen: Schneebericht ischgl.com. Wetter, Nullgradgrenze und Prognose: Open-Meteo.com (CC BY 4.0). Webcam-Bilder: ischgl.com.</span>
-    <span>Event- und Ticketangaben laut Veranstalter, Stand Oktober 2026, ohne Gewähr.</span>
+    <span>Schnee: ischgl.com · Wetter &amp; 0°-Grenze: Open-Meteo.com (CC BY 4.0) · Pisten &amp; Lifte: © OpenStreetMap-Mitwirkende · Radar: RainViewer · Karten: OpenTopoMap, CARTO · Webcams &amp; Live-Pistenplan: ischgl.com / Intermaps.</span>
+    <span>Alle Angaben ohne Gewähr. Das Ski-Navi kennt keine Sperrungen, Lawinengefahr oder Pistenzustand – vor Ort gelten Beschilderung und Pistendienst.</span>
   </footer>
 </main>
 
@@ -478,7 +560,7 @@ dialog::backdrop{background:rgba(3,8,18,.62)}
     </div>
     <div class="ed-foot">
       <span class="msg" id="ed-msg">Speichern ändert die Seite für alle.</span>
-      <button class="btn primary" type="button" id="ed-save">Speichern</button>
+      <button class="btn hot" type="button" id="ed-save">Speichern</button>
     </div>
   </form>
 </dialog>
@@ -487,10 +569,10 @@ dialog::backdrop{background:rgba(3,8,18,.62)}
   <div class="lb-body">
     <img id="lb-img" alt="">
     <div class="lb-foot">
-      <div><h3 id="lb-title">Webcam</h3><span class="stamp" id="lb-meta"></span></div>
+      <div><h3 id="lb-title">Webcam</h3><span class="small" id="lb-meta"></span></div>
       <div style="display:flex;gap:8px">
-        <a class="btn" id="lb-live" href="#" target="_blank" rel="noopener">Livestream ↗</a>
-        <button class="btn primary" type="button" id="lb-close">Schließen</button>
+        <a class="btn small" id="lb-live" href="#" target="_blank" rel="noopener">Livestream ↗</a>
+        <button class="btn small hot" type="button" id="lb-close">Schließen</button>
       </div>
     </div>
   </div>

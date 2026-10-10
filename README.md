@@ -1,14 +1,24 @@
 # Ischgl Opening 2026
 
-Trip-Seite fürs Ski-Opening in Ischgl: Countdown zum ersten Lift, Live-Schneelage,
-Nullgradgrenze als Berg-Grafik, 16 eingebettete Webcams, Tickets, Anreise, Packliste.
+Trip-Seite fürs Ski-Opening in Ischgl im Après-Ski-Look: Countdown zum ersten Lift, Live-Schneelage,
+0°-Grenze als Berg-Grafik, Pistenplan mit Ski-Navi, Wetterradar und 16 eingebettete Webcams.
 
 **Automatisch bei jedem Öffnen (und per „Aktualisieren“):**
 
 - Schneehöhen und Neuschnee der Messstationen Idalp, Alp Trida und Samnaun Dorf –
   der Server liest den offiziellen Schneebericht von ischgl.com (20 Minuten Zwischenspeicher).
-- Temperaturen, Nullgradgrenze und 7-Tage-Schneeprognose von [Open-Meteo](https://open-meteo.com) (kostenlos, ohne Schlüssel).
-- Webcam-Bilder direkt von ischgl.com, alle 5 Minuten neu.
+- Temperaturen, 0°-Grenze und 7-Tage-Schneeprognose von [Open-Meteo](https://open-meteo.com).
+- Webcam-Bilder direkt von ischgl.com, alle 5 Minuten neu (Idalp-Cam auch als Hintergrund oben).
+
+**Pistenplan:**
+
+- *Ski-Navi:* alle Pisten und Lifte der Silvretta Arena aus OpenStreetMap (der Server holt sie einmal pro Woche,
+  prüft mit Höhendaten von Open-Meteo die Fahrtrichtung und speichert sie in `pistes.json`). Route von A nach B
+  über Lifte und Pisten, Filter Blau / bis Rot / Alles, Start per GPS (nur über https), gesperrte Lifte per Antippen.
+- *Live-Status offiziell:* der interaktive Pistenplan von Intermaps mit offenen Liften und Pisten, eingebettet.
+
+**Wetterradar:** Regen-/Schneeradar der letzten 2 Stunden von RainViewer (animiert) sowie Windy-Karten für
+Neuschnee-Prognose, 0°-Grenze und Wind.
 
 **Von Hand im Browser:** Status des Skigebiets, offene Lifte, Pisten-km und eine Ansage an die Gruppe.
 
@@ -76,13 +86,15 @@ Daten liegen in `/var/lib/ischgl-opening/data.json`.
 - **Docker:** `EDIT_TOKEN` in `docker-compose.yml` setzen, `docker compose up -d --build`.
 - **Python:** `EDIT_TOKEN=meinpasswort python3 server.py`
 - **Statischer Webspace / Netlify:** Ordner `public/` hochladen. Wetter und Prognose laufen auch dort
-  automatisch, der offizielle Schneebericht braucht den Server. Bearbeiten über `…/#bearbeiten`,
+  automatisch, Schneebericht und Ski-Navi brauchen den Server. Bearbeiten über `…/#bearbeiten`,
   das Formular erzeugt eine neue `data.json` zum Ersetzen.
 
 ## Hinweise
 
 - Ändert ischgl.com den Aufbau des Schneeberichts, zeigt die Seite einen Hinweis und die Werte von Hand.
   Die Ursache steht im Log: `journalctl -u ischgl-opening -n 50`.
+- Das Ski-Navi kennt keine Sperrungen, Lawinengefahr oder Pistenzustand. Qualität der Route = Qualität der
+  OpenStreetMap-Daten. Pistendaten neu holen: `rm /var/lib/ischgl-opening/pistes.json && systemctl restart ischgl-opening`.
 - Webcam-Bilder kommen direkt von ischgl.com. Sperrt die Seite das Einbinden, zeigt die Kachel
   „Bild nicht verfügbar“ und „Live ↗“ führt zur Kamera.
 - `install-ischgl.sh` ist der Installer, der im Container läuft. Er wird aus den Dateien
