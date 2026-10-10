@@ -720,24 +720,44 @@
     {id:'124696581',n:'Ischgl Dorf',a:1400,u:'ischgl-dorf_webcam_124696581',p:1},
     {id:'100178315',n:'FlyingCam',a:1377,u:'flyingcam-ischgl_webcam_100178315'}
   ];
+  /* Die 5 wichtigsten zuerst, der Rest erst auf Klick (spart Ladezeit) */
+  var CAM_TOP=['100178345','100000136','100178353','100007712','124696581'];
+  CAMS.sort(function(x,y){var i=CAM_TOP.indexOf(x.id),j=CAM_TOP.indexOf(y.id);
+    if(i<0&&j<0)return y.a-x.a;if(i<0)return 1;if(j<0)return -1;return i-j;});
+  var camsOpen=false;
+  function camTile(c){
+    var el=document.createElement('article');el.className='cam'+(c.feat?' feat':'');
+    el.innerHTML='<button type="button" data-cam="'+c.id+'" aria-label="'+esc(c.n)+' vergrößern">'+
+      '<span class="cam-empty">'+fmtInt(c.a)+' m</span><img alt="Webcam '+esc(c.n)+'" decoding="async" hidden>'+
+      '<div class="cam-top">'+(c.feat?'<em>Hauptpiste</em>':'')+'<time hidden></time></div>'+
+      '<div class="cam-cap"><b>'+esc(c.n)+'</b><span>'+fmtInt(c.a)+' m</span></div></button>'+
+      '<a class="live" href="'+CAM_PAGE+c.u+'" target="_blank" rel="noopener">Live ↗</a>';
+    var img=el.querySelector('img'),empty=el.querySelector('.cam-empty'),tm=el.querySelector('time');
+    img.addEventListener('load',function(){img.dataset.loaded='1';img.hidden=false;empty.hidden=true;tm.hidden=false;tm.textContent=clock();});
+    img.addEventListener('error',function(){if(!img.dataset.loaded){img.hidden=true;empty.hidden=false;empty.textContent='Kein Bild';}});
+    c.img=img;c.el=el;img.src=camSrc(c.id);
+    return el;
+  }
   function buildCams(){
     var grid=$('cams');grid.innerHTML='';
-    CAMS.forEach(function(c){
-      var el=document.createElement('article');el.className='cam'+(c.feat?' feat':'');
-      el.innerHTML='<button type="button" data-cam="'+c.id+'" aria-label="'+esc(c.n)+' vergrößern">'+
-        '<span class="cam-empty">'+fmtInt(c.a)+' m</span><img alt="Webcam '+esc(c.n)+'" loading="lazy" decoding="async" hidden>'+
-        '<div class="cam-top">'+(c.feat||c.p?'<em>'+(c.feat?'Hauptpiste':'Tipp')+'</em>':'')+'<time hidden></time></div>'+
-        '<div class="cam-cap"><b>'+esc(c.n)+'</b><span>'+fmtInt(c.a)+' m</span></div></button>'+
-        '<a class="live" href="'+CAM_PAGE+c.u+'" target="_blank" rel="noopener">Live ↗</a>';
-      var img=el.querySelector('img'),empty=el.querySelector('.cam-empty'),tm=el.querySelector('time');
-      img.addEventListener('load',function(){img.dataset.loaded='1';img.hidden=false;empty.hidden=true;tm.hidden=false;tm.textContent=clock();});
-      img.addEventListener('error',function(){if(!img.dataset.loaded){img.hidden=true;empty.hidden=false;empty.textContent='Kein Bild';}});
-      c.img=img;img.src=camSrc(c.id);grid.appendChild(el);
-    });
+    CAMS.forEach(function(c){if(CAM_TOP.indexOf(c.id)>=0)grid.appendChild(camTile(c));});
     grid.addEventListener('click',function(e){var b=e.target.closest('button[data-cam]');if(!b)return;
       var c=CAMS.filter(function(x){return x.id===b.dataset.cam;})[0];if(c)openLightbox(c);});
+    var rest=CAMS.length-CAM_TOP.length,btn=$('cams-toggle');
+    btn.querySelector('span').textContent='Alle '+CAMS.length+' Cams zeigen (+'+rest+')';
+    btn.addEventListener('click',function(){
+      camsOpen=!camsOpen;btn.setAttribute('aria-expanded',camsOpen?'true':'false');
+      CAMS.forEach(function(c){
+        if(CAM_TOP.indexOf(c.id)>=0)return;
+        if(camsOpen)grid.appendChild(camTile(c));
+        else if(c.el){c.el.remove();c.el=null;c.img=null;}
+      });
+      btn.querySelector('span').textContent=camsOpen?'Weniger Cams':'Alle '+CAMS.length+' Cams zeigen (+'+rest+')';
+      if(!camsOpen)$('webcams').scrollIntoView({block:'start'});
+    });
   }
-  function refreshCams(){camBust++;CAMS.forEach(function(c){if(!c.img)return;var pre=new Image();pre.onload=function(){c.img.src=pre.src;};pre.src=camSrc(c.id);});}
+  /* Neu laden nur für Cams, die gerade angezeigt werden */
+  function refreshCams(){camBust++;CAMS.forEach(function(c){if(!c.img||!c.el)return;var pre=new Image();pre.onload=function(){if(c.img)c.img.src=pre.src;};pre.src=camSrc(c.id);});}
   setInterval(function(){if(!document.hidden){refreshCams();loadHeroCam();}},CAM_MS);
   var lb=$('lightbox');
   function openLightbox(c){
